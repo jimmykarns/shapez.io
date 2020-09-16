@@ -13,8 +13,9 @@ import { Entity } from "../entity";
 import { GameSystemWithFilter } from "../game_system_with_filter";
 import { MapChunkView } from "../map_chunk_view";
 import { defaultBuildingVariant } from "../meta_building";
+import { getCodeFromBuildingData } from "../building_codes";
 
-export const BELT_ANIM_COUNT = 28;
+export const BELT_ANIM_COUNT = 14;
 
 const logger = createLogger("belt");
 
@@ -28,9 +29,9 @@ export class BeltSystem extends GameSystemWithFilter {
          * @type {Object.<enumDirection, Array<AtlasSprite>>}
          */
         this.beltSprites = {
-            [enumDirection.top]: Loader.getSprite("sprites/belt/forward_0.png"),
-            [enumDirection.left]: Loader.getSprite("sprites/belt/left_0.png"),
-            [enumDirection.right]: Loader.getSprite("sprites/belt/right_0.png"),
+            [enumDirection.top]: Loader.getSprite("sprites/belt/built/forward_0.png"),
+            [enumDirection.left]: Loader.getSprite("sprites/belt/built/left_0.png"),
+            [enumDirection.right]: Loader.getSprite("sprites/belt/built/right_0.png"),
         };
 
         /**
@@ -44,11 +45,13 @@ export class BeltSystem extends GameSystemWithFilter {
 
         for (let i = 0; i < BELT_ANIM_COUNT; ++i) {
             this.beltAnimations[enumDirection.top].push(
-                Loader.getSprite("sprites/belt/forward_" + i + ".png")
+                Loader.getSprite("sprites/belt/built/forward_" + i + ".png")
             );
-            this.beltAnimations[enumDirection.left].push(Loader.getSprite("sprites/belt/left_" + i + ".png"));
+            this.beltAnimations[enumDirection.left].push(
+                Loader.getSprite("sprites/belt/built/left_" + i + ".png")
+            );
             this.beltAnimations[enumDirection.right].push(
-                Loader.getSprite("sprites/belt/right_" + i + ".png")
+                Loader.getSprite("sprites/belt/built/right_" + i + ".png")
             );
         }
 
@@ -121,10 +124,12 @@ export class BeltSystem extends GameSystemWithFilter {
         }
 
         const metaBelt = gMetaBuildingRegistry.findByClass(MetaBeltBaseBuilding);
-
         // Compute affected area
         const originalRect = staticComp.getTileSpaceBounds();
         const affectedArea = originalRect.expandedInAllDirections(1);
+
+        /** @type {Set<BeltPath>} */
+        const changedPaths = new Set();
 
         for (let x = affectedArea.x; x < affectedArea.right(); ++x) {
             for (let y = affectedArea.y; y < affectedArea.bottom(); ++y) {
@@ -133,51 +138,68 @@ export class BeltSystem extends GameSystemWithFilter {
                     continue;
                 }
 
-                const targetEntity = this.root.map.getTileContentXY(x, y);
-                if (!targetEntity) {
-                    // Empty tile
-                    continue;
-                }
+                const targetEntities = this.root.map.getLayersContentsMultipleXY(x, y);
+                for (let i = 0; i < targetEntities.length; ++i) {
+                    const targetEntity = targetEntities[i];
 
-                const targetBeltComp = targetEntity.components.Belt;
-                const targetStaticComp = targetEntity.components.StaticMapEntity;
+                    const targetBeltComp = targetEntity.components.Belt;
+                    const targetStaticComp = targetEntity.components.StaticMapEntity;
 
-                if (!targetBeltComp) {
-                    // Not a belt
-                    continue;
-                }
+                    if (!targetBeltComp) {
+                        // Not a belt
+                        continue;
+                    }
 
-                const {
-                    rotation,
-                    rotationVariant,
-                } = metaBelt.computeOptimalDirectionAndRotationVariantAtTile(
-                    this.root,
-                    new Vector(x, y),
-                    targetStaticComp.originalRotation,
-                    defaultBuildingVariant
-                );
+                    const {
+                        rotation,
+                        rotationVariant,
+                    } = metaBelt.computeOptimalDirectionAndRotationVariantAtTile({
+                        root: this.root,
+                        tile: new Vector(x, y),
+                        rotation: targetStaticComp.originalRotation,
+                        variant: defaultBuildingVariant,
+                        layer: targetEntity.layer,
+                    });
 
-                // Compute delta to see if anything changed
-                const newDirection = arrayBeltVariantToRotation[rotationVariant];
+                    // Compute delta to see if anything changed
+                    const newDirection = arrayBeltVariantToRotation[rotationVariant];
 
-                if (targetStaticComp.rotation !== rotation || newDirection !== targetBeltComp.direction) {
-                    // Ok, first remove it from its current path
-                    this.deleteEntityFromPath(targetBeltComp.assignedPath, targetEntity);
+                    if (targetStaticComp.rotation !== rotation || newDirection !== targetBeltComp.direction) {
+                        // Ok, first remove it from its current path
+                        this.deleteEntityFromPath(targetBeltComp.assignedPath, targetEntity);
 
-                    // Change stuff
-                    targetStaticComp.rotation = rotation;
-                    metaBelt.updateVariants(targetEntity, rotationVariant, defaultBuildingVariant);
+                        // Change stuff
+                        targetStaticComp.rotation = rotation;
+                        metaBelt.updateVariants(targetEntity, rotationVariant, defaultBuildingVariant);
 
-                    // Now add it again
-                    this.addEntityToPaths(targetEntity);
+                        // Update code as well
+                        targetStaticComp.code = getCodeFromBuildingData(
+                            metaBelt,
+                            defaultBuildingVariant,
+                            rotationVariant
+                        );
 
-                    // Sanity
-                    if (G_IS_DEV && globalConfig.debug.checkBeltPaths) {
-                        this.debug_verifyBeltPaths();
+                        // Now add it again
+                        this.addEntityToPaths(targetEntity);
+
+                        // Sanity
+                        if (G_IS_DEV && globalConfig.debug.checkBeltPaths) {
+                            this.debug_verifyBeltPaths();
+                        }
+
+                        // Make sure the chunks know about the update
+                        this.root.signals.entityChanged.dispatch(targetEntity);
+                    }
+
+                    if (targetBeltComp.assignedPath) {
+                        changedPaths.add(targetBeltComp.assignedPath);
                     }
                 }
             }
         }
+
+        // notify all paths *afterwards* to avoid multi-updates
+        changedPaths.forEach(path => path.onSurroundingsChanged());
 
         if (G_IS_DEV && globalConfig.debug.checkBeltPaths) {
             this.debug_verifyBeltPaths();
@@ -297,7 +319,7 @@ export class BeltSystem extends GameSystemWithFilter {
      * Draws all belt paths
      * @param {DrawParameters} parameters
      */
-    draw(parameters) {
+    drawBeltItems(parameters) {
         for (let i = 0; i < this.beltPaths.length; ++i) {
             this.beltPaths[i].draw(parameters);
         }
@@ -336,25 +358,17 @@ export class BeltSystem extends GameSystemWithFilter {
         const followUpVector = enumDirectionToVector[followUpDirection];
 
         const followUpTile = staticComp.origin.add(followUpVector);
-        const followUpEntity = this.root.map.getTileContent(followUpTile);
+        const followUpEntity = this.root.map.getLayerContentXY(followUpTile.x, followUpTile.y, entity.layer);
 
         // Check if theres a belt at the tile we point to
         if (followUpEntity) {
             const followUpBeltComp = followUpEntity.components.Belt;
             if (followUpBeltComp) {
                 const followUpStatic = followUpEntity.components.StaticMapEntity;
-                const followUpAcceptor = followUpEntity.components.ItemAcceptor;
 
-                // Check if the belt accepts items from our direction
-                const acceptorSlots = followUpAcceptor.slots;
-                for (let i = 0; i < acceptorSlots.length; ++i) {
-                    const slot = acceptorSlots[i];
-                    for (let k = 0; k < slot.directions.length; ++k) {
-                        const localDirection = followUpStatic.localDirectionToWorld(slot.directions[k]);
-                        if (enumInvertedDirections[localDirection] === followUpDirection) {
-                            return followUpEntity;
-                        }
-                    }
+                const acceptedDirection = followUpStatic.localDirectionToWorld(enumDirection.top);
+                if (acceptedDirection === followUpDirection) {
+                    return followUpEntity;
                 }
             }
         }
@@ -374,23 +388,19 @@ export class BeltSystem extends GameSystemWithFilter {
         const supplyVector = enumDirectionToVector[supplyDirection];
 
         const supplyTile = staticComp.origin.add(supplyVector);
-        const supplyEntity = this.root.map.getTileContent(supplyTile);
+        const supplyEntity = this.root.map.getLayerContentXY(supplyTile.x, supplyTile.y, entity.layer);
 
         // Check if theres a belt at the tile we point to
         if (supplyEntity) {
             const supplyBeltComp = supplyEntity.components.Belt;
             if (supplyBeltComp) {
                 const supplyStatic = supplyEntity.components.StaticMapEntity;
-                const supplyEjector = supplyEntity.components.ItemEjector;
+                const otherDirection = supplyStatic.localDirectionToWorld(
+                    enumInvertedDirections[supplyBeltComp.direction]
+                );
 
-                // Check if the belt accepts items from our direction
-                const ejectorSlots = supplyEjector.slots;
-                for (let i = 0; i < ejectorSlots.length; ++i) {
-                    const slot = ejectorSlots[i];
-                    const localDirection = supplyStatic.localDirectionToWorld(slot.direction);
-                    if (enumInvertedDirections[localDirection] === supplyDirection) {
-                        return supplyEntity;
-                    }
+                if (otherDirection === supplyDirection) {
+                    return supplyEntity;
                 }
             }
         }
@@ -476,10 +486,6 @@ export class BeltSystem extends GameSystemWithFilter {
      * @param {MapChunkView} chunk
      */
     drawChunk(parameters, chunk) {
-        if (parameters.zoomLevel < globalConfig.mapChunkOverviewMinZoom) {
-            return;
-        }
-
         // Limit speed to avoid belts going backwards
         const speedMultiplier = Math.min(this.root.hubGoals.getBeltBaseSpeed(), 10);
 
@@ -489,25 +495,17 @@ export class BeltSystem extends GameSystemWithFilter {
             ((this.root.time.realtimeNow() * speedMultiplier * BELT_ANIM_COUNT * 126) / 42) *
                 globalConfig.itemSpacingOnBelts
         );
-        const contents = chunk.contents;
-        for (let y = 0; y < globalConfig.mapChunkSize; ++y) {
-            for (let x = 0; x < globalConfig.mapChunkSize; ++x) {
-                const entity = contents[x][y];
+        const contents = chunk.containedEntitiesByLayer.regular;
+        for (let i = 0; i < contents.length; ++i) {
+            const entity = contents[i];
+            if (entity.components.Belt) {
+                const direction = entity.components.Belt.direction;
+                const sprite = this.beltAnimations[direction][animationIndex % BELT_ANIM_COUNT];
 
-                if (entity && entity.components.Belt) {
-                    const direction = entity.components.Belt.direction;
-                    const sprite = this.beltAnimations[direction][animationIndex % BELT_ANIM_COUNT];
-
-                    entity.components.StaticMapEntity.drawSpriteOnFullEntityBounds(
-                        parameters,
-                        sprite,
-                        0,
-                        false
-                    );
-                }
+                // Culling happens within the static map entity component
+                entity.components.StaticMapEntity.drawSpriteOnBoundsClipped(parameters, sprite, 0);
             }
         }
-        1;
     }
 
     /**

@@ -2,11 +2,13 @@ import { globalConfig } from "../../core/config";
 import { DrawParameters } from "../../core/draw_parameters";
 import { createLogger } from "../../core/logging";
 import { Rectangle } from "../../core/rectangle";
-import { enumDirectionToVector, Vector } from "../../core/vector";
+import { enumDirection, enumDirectionToVector, Vector } from "../../core/vector";
 import { BaseItem } from "../base_item";
 import { ItemEjectorComponent } from "../components/item_ejector";
 import { Entity } from "../entity";
 import { GameSystemWithFilter } from "../game_system_with_filter";
+import { enumItemProcessorTypes } from "../components/item_processor";
+import { MapChunkView } from "../map_chunk_view";
 
 const logger = createLogger("systems/ejector");
 
@@ -96,8 +98,10 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
 
         for (let x = area.x; x < area.right(); ++x) {
             for (let y = area.y; y < area.bottom(); ++y) {
-                const entity = this.root.map.getTileContentXY(x, y);
-                if (entity) {
+                const entities = this.root.map.getLayersContentsMultipleXY(x, y);
+                for (let i = 0; i < entities.length; ++i) {
+                    const entity = entities[i];
+
                     // Recompute the entity in case its relevant for this system and it
                     // hasn't already been computed
                     if (!recomputedEntities.has(entity.uid) && entity.components.ItemEjector) {
@@ -117,15 +121,13 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
         const ejectorComp = entity.components.ItemEjector;
         const staticComp = entity.components.StaticMapEntity;
 
-        // Clear the old cache.
-        ejectorComp.cachedConnectedSlots = null;
-
-        for (let ejectorSlotIndex = 0; ejectorSlotIndex < ejectorComp.slots.length; ++ejectorSlotIndex) {
-            const ejectorSlot = ejectorComp.slots[ejectorSlotIndex];
+        for (let slotIndex = 0; slotIndex < ejectorComp.slots.length; ++slotIndex) {
+            const ejectorSlot = ejectorComp.slots[slotIndex];
 
             // Clear the old cache.
             ejectorSlot.cachedDestSlot = null;
             ejectorSlot.cachedTargetEntity = null;
+            ejectorSlot.cachedBeltPath = null;
 
             // Figure out where and into which direction we eject items
             const ejectSlotWsTile = staticComp.localTileToWorld(ejectorSlot.pos);
@@ -134,37 +136,50 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             const ejectSlotTargetWsTile = ejectSlotWsTile.add(ejectSlotWsDirectionVector);
 
             // Try to find the given acceptor component to take the item
-            const targetEntity = this.root.map.getTileContent(ejectSlotTargetWsTile);
-            if (!targetEntity) {
-                // No consumer for item
-                continue;
-            }
-
-            const targetAcceptorComp = targetEntity.components.ItemAcceptor;
-            const targetStaticComp = targetEntity.components.StaticMapEntity;
-            if (!targetAcceptorComp) {
-                // Entity doesn't accept items
-                continue;
-            }
-
-            const matchingSlot = targetAcceptorComp.findMatchingSlot(
-                targetStaticComp.worldToLocalTile(ejectSlotTargetWsTile),
-                targetStaticComp.worldDirectionToLocal(ejectSlotWsDirection)
+            // Since there can be cross layer dependencies, check on all layers
+            const targetEntities = this.root.map.getLayersContentsMultipleXY(
+                ejectSlotTargetWsTile.x,
+                ejectSlotTargetWsTile.y
             );
 
-            if (!matchingSlot) {
-                // No matching slot found
-                continue;
-            }
+            for (let i = 0; i < targetEntities.length; ++i) {
+                const targetEntity = targetEntities[i];
 
-            // Ok we found a connection
-            if (ejectorComp.cachedConnectedSlots) {
-                ejectorComp.cachedConnectedSlots.push(ejectorSlot);
-            } else {
-                ejectorComp.cachedConnectedSlots = [ejectorSlot];
+                const targetStaticComp = targetEntity.components.StaticMapEntity;
+                const targetBeltComp = targetEntity.components.Belt;
+
+                // Check for belts (special case)
+                if (targetBeltComp) {
+                    const beltAcceptingDirection = targetStaticComp.localDirectionToWorld(enumDirection.top);
+                    if (ejectSlotWsDirection === beltAcceptingDirection) {
+                        ejectorSlot.cachedTargetEntity = targetEntity;
+                        ejectorSlot.cachedBeltPath = targetBeltComp.assignedPath;
+                        break;
+                    }
+                }
+
+                // Check for item acceptors
+                const targetAcceptorComp = targetEntity.components.ItemAcceptor;
+                if (!targetAcceptorComp) {
+                    // Entity doesn't accept items
+                    continue;
+                }
+
+                const matchingSlot = targetAcceptorComp.findMatchingSlot(
+                    targetStaticComp.worldToLocalTile(ejectSlotTargetWsTile),
+                    targetStaticComp.worldDirectionToLocal(ejectSlotWsDirection)
+                );
+
+                if (!matchingSlot) {
+                    // No matching slot found
+                    continue;
+                }
+
+                // A slot can always be connected to one other slot only
+                ejectorSlot.cachedTargetEntity = targetEntity;
+                ejectorSlot.cachedDestSlot = matchingSlot;
+                break;
             }
-            ejectorSlot.cachedTargetEntity = targetEntity;
-            ejectorSlot.cachedDestSlot = matchingSlot;
         }
     }
 
@@ -174,8 +189,7 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
         }
 
         // Precompute effective belt speed
-        const effectiveBeltSpeed = this.root.hubGoals.getBeltBaseSpeed() * globalConfig.itemSpacingOnBelts;
-        let progressGrowth = (effectiveBeltSpeed / 0.5) * this.root.dynamicTickrate.deltaSeconds;
+        let progressGrowth = 2 * this.root.dynamicTickrate.deltaSeconds;
 
         if (G_IS_DEV && globalConfig.debug.instantBelts) {
             progressGrowth = 1;
@@ -189,11 +203,7 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                 continue;
             }
 
-            if (!sourceEjectorComp.cachedConnectedSlots) {
-                continue;
-            }
-
-            const slots = sourceEjectorComp.cachedConnectedSlots;
+            const slots = sourceEjectorComp.slots;
             for (let j = 0; j < slots.length; ++j) {
                 const sourceSlot = slots[j];
                 const item = sourceSlot.item;
@@ -202,29 +212,50 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                     continue;
                 }
 
-                const destSlot = sourceSlot.cachedDestSlot;
                 const targetEntity = sourceSlot.cachedTargetEntity;
 
                 // Advance items on the slot
-                sourceSlot.progress = Math.min(1, sourceSlot.progress + progressGrowth);
+                sourceSlot.progress = Math.min(
+                    1,
+                    sourceSlot.progress +
+                        progressGrowth *
+                            this.root.hubGoals.getBeltBaseSpeed() *
+                            globalConfig.itemSpacingOnBelts
+                );
 
                 // Check if we are still in the process of ejecting, can't proceed then
                 if (sourceSlot.progress < 1.0) {
                     continue;
                 }
 
-                // Check if the target acceptor can actually accept this item
-                const targetAcceptorComp = targetEntity.components.ItemAcceptor;
-                if (!targetAcceptorComp.canAcceptItem(destSlot.index, item)) {
+                // Check if we are ejecting to a belt path
+                const destPath = sourceSlot.cachedBeltPath;
+                if (destPath) {
+                    // Try passing the item over
+                    if (destPath.tryAcceptItem(item)) {
+                        sourceSlot.item = null;
+                    }
+
+                    // Always stop here, since there can *either* be a belt path *or*
+                    // a slot
                     continue;
                 }
 
-                // Try to hand over the item
-                if (this.tryPassOverItem(item, targetEntity, destSlot.index)) {
-                    // Handover successful, clear slot
-                    targetAcceptorComp.onItemAccepted(destSlot.index, destSlot.acceptedDirection, item);
-                    sourceSlot.item = null;
-                    continue;
+                // Check if the target acceptor can actually accept this item
+                const destSlot = sourceSlot.cachedDestSlot;
+                if (destSlot) {
+                    const targetAcceptorComp = targetEntity.components.ItemAcceptor;
+                    if (!targetAcceptorComp.canAcceptItem(destSlot.index, item)) {
+                        continue;
+                    }
+
+                    // Try to hand over the item
+                    if (this.tryPassOverItem(item, targetEntity, destSlot.index)) {
+                        // Handover successful, clear slot
+                        targetAcceptorComp.onItemAccepted(destSlot.index, destSlot.acceptedDirection, item);
+                        sourceSlot.item = null;
+                        continue;
+                    }
                 }
             }
         }
@@ -254,6 +285,18 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
 
         const itemProcessorComp = receiver.components.ItemProcessor;
         if (itemProcessorComp) {
+            // @todo HACK
+            // Check if there are pins, and if so if they are connected
+            if (itemProcessorComp.type === enumItemProcessorTypes.filter) {
+                const pinsComp = receiver.components.WiredPins;
+                if (pinsComp && pinsComp.slots.length === 1) {
+                    const network = pinsComp.slots[0].linkedNetwork;
+                    if (!network || !network.currentValue) {
+                        return false;
+                    }
+                }
+            }
+
             // Its an item processor ..
             if (itemProcessorComp.tryTakeItem(item, slotIndex)) {
                 return true;
@@ -290,60 +333,56 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             return false;
         }
 
-        const energyGeneratorComp = receiver.components.EnergyGenerator;
-        if (energyGeneratorComp) {
-            if (energyGeneratorComp.tryTakeItem(item)) {
-                // Passed it over
-                return true;
-            }
-
-            // Energy generator comp can't have anything else
-            return false;
-        }
-
         return false;
-    }
-
-    draw(parameters) {
-        this.forEachMatchingEntityOnScreen(parameters, this.drawSingleEntity.bind(this));
     }
 
     /**
      * @param {DrawParameters} parameters
-     * @param {Entity} entity
+     * @param {MapChunkView} chunk
      */
-    drawSingleEntity(parameters, entity) {
-        const ejectorComp = entity.components.ItemEjector;
-        const staticComp = entity.components.StaticMapEntity;
+    drawChunk(parameters, chunk) {
+        const contents = chunk.containedEntitiesByLayer.regular;
 
-        if (!staticComp.shouldBeDrawn(parameters)) {
-            return;
-        }
-
-        for (let i = 0; i < ejectorComp.slots.length; ++i) {
-            const slot = ejectorComp.slots[i];
-            const ejectedItem = slot.item;
-            if (!ejectedItem) {
-                // No item
+        for (let i = 0; i < contents.length; ++i) {
+            const entity = contents[i];
+            const ejectorComp = entity.components.ItemEjector;
+            if (!ejectorComp) {
                 continue;
             }
 
-            const realPosition = slot.pos.rotateFastMultipleOf90(staticComp.rotation);
-            const realDirection = Vector.transformDirectionFromMultipleOf90(
-                slot.direction,
-                staticComp.rotation
-            );
-            const realDirectionVector = enumDirectionToVector[realDirection];
+            const staticComp = entity.components.StaticMapEntity;
 
-            const tileX =
-                staticComp.origin.x + realPosition.x + 0.5 + realDirectionVector.x * 0.5 * slot.progress;
-            const tileY =
-                staticComp.origin.y + realPosition.y + 0.5 + realDirectionVector.y * 0.5 * slot.progress;
+            for (let i = 0; i < ejectorComp.slots.length; ++i) {
+                const slot = ejectorComp.slots[i];
+                const ejectedItem = slot.item;
 
-            const worldX = tileX * globalConfig.tileSize;
-            const worldY = tileY * globalConfig.tileSize;
+                if (!ejectedItem) {
+                    // No item
+                    continue;
+                }
 
-            ejectedItem.draw(worldX, worldY, parameters);
+                const realPosition = staticComp.localTileToWorld(slot.pos);
+                if (!chunk.tileSpaceRectangle.containsPoint(realPosition.x, realPosition.y)) {
+                    // Not within this chunk
+                    continue;
+                }
+
+                const realDirection = staticComp.localDirectionToWorld(slot.direction);
+                const realDirectionVector = enumDirectionToVector[realDirection];
+
+                const tileX = realPosition.x + 0.5 + realDirectionVector.x * 0.5 * slot.progress;
+                const tileY = realPosition.y + 0.5 + realDirectionVector.y * 0.5 * slot.progress;
+
+                const worldX = tileX * globalConfig.tileSize;
+                const worldY = tileY * globalConfig.tileSize;
+
+                ejectedItem.drawItemCenteredClipped(
+                    worldX,
+                    worldY,
+                    parameters,
+                    globalConfig.defaultItemDiameter
+                );
+            }
         }
     }
 }

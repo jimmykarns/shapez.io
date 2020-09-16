@@ -1,21 +1,27 @@
+import { enumDirection, Vector } from "../../core/vector";
+import { BaseItem } from "../base_item";
 import { Component } from "../component";
-import { Vector } from "../../core/vector";
 import { types } from "../../savegame/serialization";
+import { typeItemSingleton } from "../item_resolver";
 
 /** @enum {string} */
 export const enumPinSlotType = {
-    energyEjector: "energyEjector",
+    logicalEjector: "logicalEjector",
+    logicalAcceptor: "logicalAcceptor",
 };
 
 /** @typedef {{
  *   pos: Vector,
- *   type: enumPinSlotType
+ *   type: enumPinSlotType,
+ *   direction: enumDirection
  * }} WirePinSlotDefinition */
 
 /** @typedef {{
  *   pos: Vector,
  *   type: enumPinSlotType,
- *   value: number
+ *   direction: enumDirection,
+ *   value: BaseItem,
+ *   linkedNetwork: import("../systems/wire").WireNetwork
  * }} WirePinSlot */
 
 export class WiredPinsComponent extends Component {
@@ -27,9 +33,7 @@ export class WiredPinsComponent extends Component {
         return {
             slots: types.array(
                 types.structured({
-                    pos: types.vector,
-                    type: types.enum(enumPinSlotType),
-                    value: types.float,
+                    value: types.nullable(typeItemSingleton),
                 })
             ),
         };
@@ -40,9 +44,23 @@ export class WiredPinsComponent extends Component {
      * @param {object} param0
      * @param {Array<WirePinSlotDefinition>} param0.slots
      */
-    constructor({ slots }) {
+    constructor({ slots = [] }) {
         super();
         this.setSlots(slots);
+    }
+
+    duplicateWithoutContents() {
+        const slots = [];
+        for (let i = 0; i < this.slots.length; ++i) {
+            const slot = this.slots[i];
+            slots.push({
+                pos: slot.pos.copy(),
+                type: slot.type,
+                direction: slot.direction,
+            });
+        }
+
+        return new WiredPinsComponent({ slots });
     }
 
     /**
@@ -58,7 +76,9 @@ export class WiredPinsComponent extends Component {
             this.slots.push({
                 pos: slotData.pos,
                 type: slotData.type,
-                value: 0.0,
+                direction: slotData.direction,
+                value: null,
+                linkedNetwork: null,
             });
         }
     }

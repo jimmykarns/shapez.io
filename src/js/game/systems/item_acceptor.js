@@ -1,31 +1,18 @@
-import { GameSystemWithFilter } from "../game_system_with_filter";
 import { globalConfig } from "../../core/config";
 import { DrawParameters } from "../../core/draw_parameters";
-import { Entity } from "../entity";
-import { enumDirectionToVector, enumDirectionToAngle } from "../../core/vector";
-import { ItemAcceptorComponent } from "../components/item_acceptor";
-import { Loader } from "../../core/loader";
-import { drawRotatedSprite } from "../../core/draw_utils";
-import { BELT_ANIM_COUNT } from "./belt";
 import { fastArrayDelete } from "../../core/utils";
+import { enumDirectionToVector } from "../../core/vector";
+import { ItemAcceptorComponent } from "../components/item_acceptor";
+import { GameSystemWithFilter } from "../game_system_with_filter";
+import { MapChunkView } from "../map_chunk_view";
 
 export class ItemAcceptorSystem extends GameSystemWithFilter {
     constructor(root) {
         super(root, [ItemAcceptorComponent]);
-
-        this.underlayBeltSprites = [];
-
-        for (let i = 0; i < BELT_ANIM_COUNT; ++i) {
-            this.underlayBeltSprites.push(Loader.getSprite("sprites/belt/forward_" + i + ".png"));
-        }
     }
 
     update() {
-        const progress =
-            this.root.dynamicTickrate.deltaSeconds *
-            this.root.hubGoals.getBeltBaseSpeed() *
-            2 * // * 2 because its only a half tile
-            globalConfig.itemSpacingOnBelts;
+        const progress = this.root.dynamicTickrate.deltaSeconds * 2; // * 2 because its only a half tile
 
         for (let i = 0; i < this.allEntities.length; ++i) {
             const entity = this.allEntities[i];
@@ -35,7 +22,8 @@ export class ItemAcceptorSystem extends GameSystemWithFilter {
             // Process item consumption animations to avoid items popping from the belts
             for (let animIndex = 0; animIndex < animations.length; ++animIndex) {
                 const anim = animations[animIndex];
-                anim.animProgress += progress;
+                anim.animProgress +=
+                    progress * this.root.hubGoals.getBeltBaseSpeed() * globalConfig.itemSpacingOnBelts;
                 if (anim.animProgress > 1) {
                     // Original
                     // animations.splice(animIndex, 1);
@@ -49,83 +37,46 @@ export class ItemAcceptorSystem extends GameSystemWithFilter {
         }
     }
 
-    draw(parameters) {
-        this.forEachMatchingEntityOnScreen(parameters, this.drawEntity.bind(this));
-    }
-
-    drawUnderlays(parameters) {
-        this.forEachMatchingEntityOnScreen(parameters, this.drawEntityUnderlays.bind(this));
-    }
-
     /**
      * @param {DrawParameters} parameters
-     * @param {Entity} entity
+     * @param {MapChunkView} chunk
      */
-    drawEntity(parameters, entity) {
-        const staticComp = entity.components.StaticMapEntity;
-        const acceptorComp = entity.components.ItemAcceptor;
+    drawChunk(parameters, chunk) {
+        const contents = chunk.containedEntitiesByLayer.regular;
+        for (let i = 0; i < contents.length; ++i) {
+            const entity = contents[i];
+            const acceptorComp = entity.components.ItemAcceptor;
+            if (!acceptorComp) {
+                continue;
+            }
 
-        if (!staticComp.shouldBeDrawn(parameters)) {
-            return;
-        }
+            const staticComp = entity.components.StaticMapEntity;
+            for (let animIndex = 0; animIndex < acceptorComp.itemConsumptionAnimations.length; ++animIndex) {
+                const { item, slotIndex, animProgress, direction } = acceptorComp.itemConsumptionAnimations[
+                    animIndex
+                ];
 
-        for (let animIndex = 0; animIndex < acceptorComp.itemConsumptionAnimations.length; ++animIndex) {
-            const { item, slotIndex, animProgress, direction } = acceptorComp.itemConsumptionAnimations[
-                animIndex
-            ];
+                const slotData = acceptorComp.slots[slotIndex];
+                const realSlotPos = staticComp.localTileToWorld(slotData.pos);
 
-            const slotData = acceptorComp.slots[slotIndex];
-            const slotWorldPos = staticComp.applyRotationToVector(slotData.pos).add(staticComp.origin);
+                if (!chunk.tileSpaceRectangle.containsPoint(realSlotPos.x, realSlotPos.y)) {
+                    // Not within this chunk
+                    continue;
+                }
 
-            const fadeOutDirection = enumDirectionToVector[staticComp.localDirectionToWorld(direction)];
-            const finalTile = slotWorldPos.subScalars(
-                fadeOutDirection.x * (animProgress / 2 - 0.5),
-                fadeOutDirection.y * (animProgress / 2 - 0.5)
-            );
-            item.draw(
-                (finalTile.x + 0.5) * globalConfig.tileSize,
-                (finalTile.y + 0.5) * globalConfig.tileSize,
-                parameters
-            );
-        }
-    }
+                const fadeOutDirection = enumDirectionToVector[staticComp.localDirectionToWorld(direction)];
+                const finalTile = realSlotPos.subScalars(
+                    fadeOutDirection.x * (animProgress / 2 - 0.5),
+                    fadeOutDirection.y * (animProgress / 2 - 0.5)
+                );
 
-    /**
-     * @param {DrawParameters} parameters
-     * @param {Entity} entity
-     */
-    drawEntityUnderlays(parameters, entity) {
-        const staticComp = entity.components.StaticMapEntity;
-        const acceptorComp = entity.components.ItemAcceptor;
-
-        if (!staticComp.shouldBeDrawn(parameters)) {
-            return;
-        }
-
-        // Limit speed to avoid belts going backwards
-        const speedMultiplier = Math.min(this.root.hubGoals.getBeltBaseSpeed(), 10);
-
-        const underlays = acceptorComp.beltUnderlays;
-        for (let i = 0; i < underlays.length; ++i) {
-            const { pos, direction } = underlays[i];
-
-            const transformedPos = staticComp.localTileToWorld(pos);
-            const angle = enumDirectionToAngle[staticComp.localDirectionToWorld(direction)];
-
-            // SYNC with systems/belt.js:drawSingleEntity!
-            const animationIndex = Math.floor(
-                ((this.root.time.realtimeNow() * speedMultiplier * BELT_ANIM_COUNT * 126) / 42) *
-                    globalConfig.itemSpacingOnBelts
-            );
-
-            drawRotatedSprite({
-                parameters,
-                sprite: this.underlayBeltSprites[animationIndex % this.underlayBeltSprites.length],
-                x: (transformedPos.x + 0.5) * globalConfig.tileSize,
-                y: (transformedPos.y + 0.5) * globalConfig.tileSize,
-                angle: Math.radians(angle),
-                size: globalConfig.tileSize,
-            });
+                item.drawItemCenteredClipped(
+                    (finalTile.x + 0.5) * globalConfig.tileSize,
+                    (finalTile.y + 0.5) * globalConfig.tileSize,
+                    parameters,
+                    globalConfig.defaultItemDiameter
+                );
+            }
         }
     }
 }

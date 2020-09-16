@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 import { Signal } from "../core/signal";
 import { RandomNumberGenerator } from "../core/rng";
 import { createLogger } from "../core/logging";
@@ -27,15 +26,13 @@ import { ShapeDefinition } from "./shape_definition";
 import { BaseItem } from "./base_item";
 import { DynamicTickrate } from "./dynamic_tickrate";
 import { KeyActionMapper } from "./key_action_mapper";
+import { Vector } from "../core/vector";
 /* typehints:end */
 
 const logger = createLogger("game/root");
 
-/** @enum {string} */
-export const enumEditMode = {
-    regular: "regular",
-    wires: "wires",
-};
+/** @type {Array<Layer>} */
+export const layers = ["regular", "wires"];
 
 /**
  * The game root is basically the whole game state at a given point,
@@ -130,13 +127,14 @@ export class GameRoot {
         /** @type {DynamicTickrate} */
         this.dynamicTickrate = null;
 
-        /** @type {enumEditMode} */
-        this.editMode = enumEditMode.regular;
+        /** @type {Layer} */
+        this.currentLayer = "regular";
 
         this.signals = {
             // Entities
             entityManuallyPlaced: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
             entityAdded: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
+            entityChanged: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
             entityGotNewComponent: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
             entityComponentRemoved: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
             entityQueuedForDestroy: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
@@ -151,21 +149,28 @@ export class GameRoot {
             gameSaved: /** @type {TypedSignal<[]>} */ (new Signal()), // Game got saved
             gameRestored: /** @type {TypedSignal<[]>} */ (new Signal()), // Game got restored
 
+            gameFrameStarted: /** @type {TypedSignal<[]>} */ (new Signal()), // New frame
+
             storyGoalCompleted: /** @type {TypedSignal<[number, string]>} */ (new Signal()),
             upgradePurchased: /** @type {TypedSignal<[string]>} */ (new Signal()),
 
             // Called right after game is initialized
             postLoadHook: /** @type {TypedSignal<[]>} */ (new Signal()),
 
-            // Can be used to trigger an async task
-            performAsync: /** @type {TypedSignal<[function]>} */ (new Signal()),
-
             shapeDelivered: /** @type {TypedSignal<[ShapeDefinition]>} */ (new Signal()),
             itemProduced: /** @type {TypedSignal<[BaseItem]>} */ (new Signal()),
 
             bulkOperationFinished: /** @type {TypedSignal<[]>} */ (new Signal()),
 
-            editModeChanged: /** @type {TypedSignal<[enumEditMode]>} */ (new Signal()),
+            editModeChanged: /** @type {TypedSignal<[Layer]>} */ (new Signal()),
+
+            // Called to check if an entity can be placed, second parameter is an additional offset.
+            // Use to introduce additional placement checks
+            prePlacementCheck: /** @type {TypedSignal<[Entity, Vector]>} */ (new Signal()),
+
+            // Called before actually placing an entity, use to perform additional logic
+            // for freeing space before actually placing.
+            freeEntityAreaBeforeBuild: /** @type {TypedSignal<[Entity]>} */ (new Signal()),
         };
 
         // RNG's

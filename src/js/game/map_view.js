@@ -4,6 +4,7 @@ import { BaseMap } from "./map";
 import { freeCanvas, makeOffscreenBuffer } from "../core/buffer_utils";
 import { Entity } from "./entity";
 import { THEME } from "./theme";
+import { MapChunkView } from "./map_chunk_view";
 
 /**
  * This is the view of the map, it extends the map which is the raw model and allows
@@ -35,6 +36,7 @@ export class MapView extends BaseMap {
 
         this.root.signals.entityAdded.add(this.onEntityChanged, this);
         this.root.signals.entityDestroyed.add(this.onEntityChanged, this);
+        this.root.signals.entityChanged.add(this.onEntityChanged, this);
     }
 
     cleanup() {
@@ -44,7 +46,7 @@ export class MapView extends BaseMap {
     }
 
     /**
-     * Called when an entity was added or removed
+     * Called when an entity was added, removed or changed
      * @param {Entity} entity
      */
     onEntityChanged(entity) {
@@ -129,31 +131,56 @@ export class MapView extends BaseMap {
      * @param {DrawParameters} parameters
      */
     drawForeground(parameters) {
-        const cullRange = parameters.visibleRect.toTileCullRectangle();
+        this.drawVisibleChunks(parameters, MapChunkView.prototype.drawForegroundLayer);
+    }
+
+    /**
+     * Calls a given method on all given chunks
+     * @param {DrawParameters} parameters
+     * @param {function} method
+     */
+    drawVisibleChunks(parameters, method) {
+        const cullRange = parameters.visibleRect.allScaled(1 / globalConfig.tileSize);
         const top = cullRange.top();
         const right = cullRange.right();
         const bottom = cullRange.bottom();
         const left = cullRange.left();
 
-        const border = 1;
+        const border = 0;
         const minY = top - border;
         const maxY = bottom + border;
         const minX = left - border;
-        const maxX = right + border - 1;
+        const maxX = right + border;
 
         const chunkStartX = Math.floor(minX / globalConfig.mapChunkSize);
         const chunkStartY = Math.floor(minY / globalConfig.mapChunkSize);
 
-        const chunkEndX = Math.ceil(maxX / globalConfig.mapChunkSize);
-        const chunkEndY = Math.ceil(maxY / globalConfig.mapChunkSize);
+        const chunkEndX = Math.floor(maxX / globalConfig.mapChunkSize);
+        const chunkEndY = Math.floor(maxY / globalConfig.mapChunkSize);
 
         // Render y from top down for proper blending
         for (let chunkX = chunkStartX; chunkX <= chunkEndX; ++chunkX) {
             for (let chunkY = chunkStartY; chunkY <= chunkEndY; ++chunkY) {
                 const chunk = this.root.map.getChunk(chunkX, chunkY, true);
-                chunk.drawForegroundLayer(parameters);
+                method.call(chunk, parameters);
             }
         }
+    }
+
+    /**
+     * Draws the wires foreground
+     * @param {DrawParameters} parameters
+     */
+    drawWiresForegroundLayer(parameters) {
+        this.drawVisibleChunks(parameters, MapChunkView.prototype.drawWiresForegroundLayer);
+    }
+
+    /**
+     * Draws the map overlay
+     * @param {DrawParameters} parameters
+     */
+    drawOverlay(parameters) {
+        this.drawVisibleChunks(parameters, MapChunkView.prototype.drawOverlay);
     }
 
     /**
@@ -161,15 +188,14 @@ export class MapView extends BaseMap {
      * @param {DrawParameters} parameters
      */
     drawBackground(parameters) {
-        // If not using prerendered, draw background
-        if (parameters.zoomLevel > globalConfig.mapChunkPrerenderMinZoom) {
-            if (!this.cachedBackgroundPattern) {
-                this.cachedBackgroundPattern = parameters.context.createPattern(
-                    this.cachedBackgroundCanvas,
-                    "repeat"
-                );
-            }
+        if (!this.cachedBackgroundPattern) {
+            this.cachedBackgroundPattern = parameters.context.createPattern(
+                this.cachedBackgroundCanvas,
+                "repeat"
+            );
+        }
 
+        if (!this.root.app.settings.getAllSettings().disableTileGrid) {
             const dpi = this.backgroundCacheDPI;
             parameters.context.scale(1 / dpi, 1 / dpi);
 
@@ -183,31 +209,7 @@ export class MapView extends BaseMap {
             parameters.context.scale(dpi, dpi);
         }
 
-        const cullRange = parameters.visibleRect.toTileCullRectangle();
-        const top = cullRange.top();
-        const right = cullRange.right();
-        const bottom = cullRange.bottom();
-        const left = cullRange.left();
-
-        const border = 1;
-        const minY = top - border;
-        const maxY = bottom + border;
-        const minX = left - border;
-        const maxX = right + border - 1;
-
-        const chunkStartX = Math.floor(minX / globalConfig.mapChunkSize);
-        const chunkStartY = Math.floor(minY / globalConfig.mapChunkSize);
-
-        const chunkEndX = Math.ceil(maxX / globalConfig.mapChunkSize);
-        const chunkEndY = Math.ceil(maxY / globalConfig.mapChunkSize);
-
-        // Render y from top down for proper blending
-        for (let chunkX = chunkStartX; chunkX <= chunkEndX; ++chunkX) {
-            for (let chunkY = chunkStartY; chunkY <= chunkEndY; ++chunkY) {
-                const chunk = this.root.map.getChunk(chunkX, chunkY, true);
-                chunk.drawBackgroundLayer(parameters);
-            }
-        }
+        this.drawVisibleChunks(parameters, MapChunkView.prototype.drawBackgroundLayer);
 
         if (G_IS_DEV && globalConfig.debug.showChunkBorders) {
             const cullRange = parameters.visibleRect.toTileCullRectangle();
@@ -228,21 +230,20 @@ export class MapView extends BaseMap {
             const chunkEndX = Math.ceil(maxX / globalConfig.mapChunkSize);
             const chunkEndY = Math.ceil(maxY / globalConfig.mapChunkSize);
 
-            // Render y from top down for proper blending
             for (let chunkX = chunkStartX; chunkX <= chunkEndX; ++chunkX) {
                 for (let chunkY = chunkStartY; chunkY <= chunkEndY; ++chunkY) {
                     parameters.context.fillStyle = "#ffaaaa";
                     parameters.context.fillRect(
-                        chunkX * globalConfig.mapChunkSize * globalConfig.tileSize,
-                        chunkY * globalConfig.mapChunkSize * globalConfig.tileSize,
-                        globalConfig.mapChunkSize * globalConfig.tileSize,
+                        chunkX * globalConfig.mapChunkWorldSize,
+                        chunkY * globalConfig.mapChunkWorldSize,
+                        globalConfig.mapChunkWorldSize,
                         3
                     );
                     parameters.context.fillRect(
-                        chunkX * globalConfig.mapChunkSize * globalConfig.tileSize,
-                        chunkY * globalConfig.mapChunkSize * globalConfig.tileSize,
+                        chunkX * globalConfig.mapChunkWorldSize,
+                        chunkY * globalConfig.mapChunkWorldSize,
                         3,
-                        globalConfig.mapChunkSize * globalConfig.tileSize
+                        globalConfig.mapChunkWorldSize
                     );
                 }
             }

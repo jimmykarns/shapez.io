@@ -118,10 +118,7 @@ export const enumColorMixingResults = {
 // Create same color lookups
 for (const color in enumColors) {
     enumColorMixingResults[color][color] = color;
-
-    // Anything with white is white again
     enumColorMixingResults[color][c.white] = c.white;
-
     // Anything with uncolored is the same color
     enumColorMixingResults[color][c.uncolored] = color;
 }

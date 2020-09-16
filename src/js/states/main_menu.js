@@ -1,11 +1,10 @@
 import { GameState } from "../core/game_state";
 import { cachebust } from "../core/cachebust";
-import { globalConfig, IS_DEBUG, IS_DEMO, THIRDPARTY_URLS } from "../core/config";
+import { globalConfig, IS_DEMO, THIRDPARTY_URLS } from "../core/config";
 import {
     makeDiv,
     makeButtonElement,
     formatSecondsToTimeAgo,
-    generateFileDownload,
     waitNextFrame,
     isSupportedBrowser,
     makeButton,
@@ -14,9 +13,29 @@ import {
 import { ReadWriteProxy } from "../core/read_write_proxy";
 import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
 import { T } from "../translations";
-import { PlatformWrapperImplBrowser } from "../platform/browser/wrapper";
 import { getApplicationSettingById } from "../profile/application_settings";
-import { EnumSetting } from "../profile/setting_types";
+
+/**
+ * @typedef {import("../savegame/savegame_typedefs").SavegameMetadata} SavegameMetadata
+ * @typedef {import("../profile/setting_types").EnumSetting} EnumSetting
+ */
+
+/**
+ * Generates a file download
+ * @param {string} filename
+ * @param {string} text
+ */
+function generateFileDownload(filename, text) {
+    var element = document.createElement("a");
+    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
+    element.setAttribute("download", filename);
+
+    element.style.display = "none";
+    document.body.appendChild(element);
+
+    element.click();
+    document.body.removeChild(element);
+}
 
 export class MainMenuState extends GameState {
     constructor() {
@@ -47,17 +66,14 @@ export class MainMenuState extends GameState {
             }
             </div>
 
-            ${
-                G_IS_STANDALONE
-                    ? ""
-                    : `<video autoplay muted loop class="fullscreenBackgroundVideo">
+            <video autoplay muted loop class="fullscreenBackgroundVideo">
                 <source src="${cachebust("res/bg_render.webm")}" type="video/webm">
-            </video>`
-            }
+            </video>
 
 
             <div class="logo">
                 <img src="${cachebust("res/logo.png")}" alt="shapez.io Logo">
+                <span class="updateLabel">Wires update!</span>
             </div>
 
 
@@ -95,10 +111,10 @@ export class MainMenuState extends GameState {
                     <a class="redditLink">${T.mainMenu.subreddit}</a>
 
                     <a class="changelog">${T.changelog.title}</a>
-                
+
                     <a class="helpTranslate">${T.mainMenu.helpTranslate}</a>
                 </div>
-            
+
                 <div class="author">${T.mainMenu.madeBy.replace(
                     "<author-link>",
                     '<a class="producerLink" target="_blank">Tobias Springer</a>'
@@ -131,7 +147,6 @@ export class MainMenuState extends GameState {
                     const closeLoader = this.dialogs.showLoadingDialog();
                     const reader = new FileReader();
                     reader.addEventListener("load", event => {
-                        // @ts-ignore
                         const contents = event.target.result;
                         let realContent;
 
@@ -208,25 +223,18 @@ export class MainMenuState extends GameState {
 
         // Initialize video
         this.videoElement = this.htmlElement.querySelector("video");
-        if (this.videoElement) {
-            this.videoElement.playbackRate = 0.9;
-            this.videoElement.addEventListener("canplay", () => {
-                if (this.videoElement) {
-                    this.videoElement.classList.add("loaded");
-                }
-            });
-        }
+        this.videoElement.playbackRate = 0.9;
+        this.videoElement.addEventListener("canplay", () => {
+            if (this.videoElement) {
+                this.videoElement.classList.add("loaded");
+            }
+        });
 
         this.trackClicks(qs(".settingsButton"), this.onSettingsButtonClicked);
         this.trackClicks(qs(".changelog"), this.onChangelogClicked);
         this.trackClicks(qs(".redditLink"), this.onRedditClicked);
         this.trackClicks(qs(".languageChoose"), this.onLanguageChooseClicked);
         this.trackClicks(qs(".helpTranslate"), this.onTranslationHelpLinkClicked);
-
-        const contestButton = qs(".participateContest");
-        if (contestButton) {
-            this.trackClicks(contestButton, this.onContestClicked);
-        }
 
         if (G_IS_STANDALONE) {
             this.trackClicks(qs(".exitAppButton"), this.onExitAppButtonClicked);
@@ -317,15 +325,6 @@ export class MainMenuState extends GameState {
         this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.reddit);
     }
 
-    onContestClicked() {
-        this.app.analytics.trackUiClick("contest_click");
-
-        this.dialogs.showInfo(
-            T.mainMenu.contests.contest_01_03062020.title,
-            T.mainMenu.contests.contest_01_03062020.longDesc
-        );
-    }
-
     onLanguageChooseClicked() {
         this.app.analytics.trackUiClick("choose_language");
         const setting = /** @type {EnumSetting} */ (getApplicationSettingById("language"));
@@ -413,7 +412,7 @@ export class MainMenuState extends GameState {
     }
 
     /**
-     * @param {object} game
+     * @param {SavegameMetadata} game
      */
     resumeGame(game) {
         this.app.analytics.trackUiClick("resume_game");
@@ -438,7 +437,7 @@ export class MainMenuState extends GameState {
     }
 
     /**
-     * @param {object} game
+     * @param {SavegameMetadata} game
      */
     deleteGame(game) {
         this.app.analytics.trackUiClick("delete_game");
@@ -466,7 +465,7 @@ export class MainMenuState extends GameState {
     }
 
     /**
-     * @param {object} game
+     * @param {SavegameMetadata} game
      */
     downloadGame(game) {
         this.app.analytics.trackUiClick("download_game");

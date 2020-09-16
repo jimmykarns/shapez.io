@@ -7,7 +7,6 @@ import { DrawParameters } from "../../../core/draw_parameters";
 import { THEME } from "../../theme";
 import { globalConfig } from "../../../core/config";
 import { T } from "../../../translations";
-import { enumItemType } from "../../base_item";
 
 export class HUDColorBlindHelper extends BaseHUDPart {
     createElements(parent) {
@@ -40,9 +39,14 @@ export class HUDColorBlindHelper extends BaseHUDPart {
             return null;
         }
 
+        if (this.root.currentLayer !== "regular") {
+            // Not in regular mode
+            return null;
+        }
+
         const worldPos = this.root.camera.screenToWorld(mousePosition);
         const tile = worldPos.toTileSpace();
-        const contents = this.root.map.getTileContent(tile);
+        const contents = this.root.map.getTileContent(tile, this.root.currentLayer);
 
         if (contents && !contents.components.Miner) {
             const beltComp = contents.components.Belt;
@@ -50,7 +54,7 @@ export class HUDColorBlindHelper extends BaseHUDPart {
             // Check if the belt has a color item
             if (beltComp) {
                 const item = beltComp.assignedPath.findItemAtTile(tile);
-                if (item && item.getItemType() === enumItemType.color) {
+                if (item && item.getItemType() === "color") {
                     return /** @type {ColorItem} */ (item).color;
                 }
             }
@@ -60,7 +64,7 @@ export class HUDColorBlindHelper extends BaseHUDPart {
             if (ejectorComp) {
                 for (let i = 0; i < ejectorComp.slots.length; ++i) {
                     const slot = ejectorComp.slots[i];
-                    if (slot.item && slot.item.getItemType() === enumItemType.color) {
+                    if (slot.item && slot.item.getItemType() === "color") {
                         return /** @type {ColorItem} */ (slot.item).color;
                     }
                 }
@@ -68,7 +72,7 @@ export class HUDColorBlindHelper extends BaseHUDPart {
         } else {
             // We hovered a lower layer, show the color there
             const lowerLayer = this.root.map.getLowerLayerContentXY(tile.x, tile.y);
-            if (lowerLayer && lowerLayer.getItemType() === enumItemType.color) {
+            if (lowerLayer && lowerLayer.getItemType() === "color") {
                 return /** @type {ColorItem} */ (lowerLayer).color;
             }
         }

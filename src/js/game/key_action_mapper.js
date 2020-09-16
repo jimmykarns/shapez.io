@@ -20,13 +20,13 @@ export const KEYMAPPINGS = {
     ingame: {
         menuOpenShop: { keyCode: key("F") },
         menuOpenStats: { keyCode: key("G") },
+        menuClose: { keyCode: key("Q") },
 
         toggleHud: { keyCode: 113 }, // F2
         exportScreenshot: { keyCode: 114 }, // F3PS
         toggleFPSInfo: { keyCode: 115 }, // F4
 
-        // WIRES
-        // switchLayers: { keyCode: key("Y") },
+        switchLayers: { keyCode: key("Y") },
     },
 
     navigation: {
@@ -55,8 +55,15 @@ export const KEYMAPPINGS = {
         painter: { keyCode: key("9") },
         trash: { keyCode: key("0") },
 
-        // WIRES
-        // energy_generator: { keyCode: key("O") },
+        lever: { keyCode: key("L") },
+        filter: { keyCode: key("B") },
+        display: { keyCode: key("N") },
+
+        wire: { keyCode: key("1") },
+        wire_tunnel: { keyCode: key("2") },
+        constant_signal: { keyCode: key("3") },
+        logic_gate: { keyCode: key("4") },
+        virtual_processor: { keyCode: key("5") },
     },
 
     placement: {
@@ -242,7 +249,6 @@ export function getStringForKeyCode(code) {
             return "'";
     }
 
-    // TODO
     return String.fromCharCode(code);
 }
 

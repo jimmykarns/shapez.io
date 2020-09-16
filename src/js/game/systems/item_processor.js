@@ -4,7 +4,8 @@ import { enumColorMixingResults } from "../colors";
 import { enumItemProcessorTypes, ItemProcessorComponent } from "../components/item_processor";
 import { Entity } from "../entity";
 import { GameSystemWithFilter } from "../game_system_with_filter";
-import { ColorItem } from "../items/color_item";
+import { BOOL_TRUE_SINGLETON } from "../items/boolean_item";
+import { ColorItem, COLOR_ITEM_SINGLETONS } from "../items/color_item";
 import { ShapeItem } from "../items/shape_item";
 
 export class ItemProcessorSystem extends GameSystemWithFilter {
@@ -106,6 +107,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
 
         switch (processorComp.type) {
             // SPLITTER
+            case enumItemProcessorTypes.splitterWires:
             case enumItemProcessorTypes.splitter: {
                 trackProduction = false;
                 const availableSlots = entity.components.ItemEjector.slots.length;
@@ -132,7 +134,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                     const definition = cutDefinitions[i];
                     if (!definition.isEntirelyEmpty()) {
                         outItems.push({
-                            item: new ShapeItem(definition),
+                            item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(definition),
                             requiredSlot: i,
                         });
                     }
@@ -153,7 +155,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                     const definition = cutDefinitions[i];
                     if (!definition.isEntirelyEmpty()) {
                         outItems.push({
-                            item: new ShapeItem(definition),
+                            item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(definition),
                             requiredSlot: i,
                         });
                     }
@@ -170,12 +172,12 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
 
                 const rotatedDefinition = this.root.shapeDefinitionMgr.shapeActionRotateCW(inputDefinition);
                 outItems.push({
-                    item: new ShapeItem(rotatedDefinition),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(rotatedDefinition),
                 });
                 break;
             }
 
-            // ROTATER ( CCW)
+            // ROTATER (CCW)
             case enumItemProcessorTypes.rotaterCCW: {
                 const inputItem = /** @type {ShapeItem} */ (items[0].item);
                 assert(inputItem instanceof ShapeItem, "Input for rotation is not a shape");
@@ -183,7 +185,20 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
 
                 const rotatedDefinition = this.root.shapeDefinitionMgr.shapeActionRotateCCW(inputDefinition);
                 outItems.push({
-                    item: new ShapeItem(rotatedDefinition),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(rotatedDefinition),
+                });
+                break;
+            }
+
+            // ROTATER (FL)
+            case enumItemProcessorTypes.rotaterFL: {
+                const inputItem = /** @type {ShapeItem} */ (items[0].item);
+                assert(inputItem instanceof ShapeItem, "Input for rotation is not a shape");
+                const inputDefinition = inputItem.definition;
+
+                const rotatedDefinition = this.root.shapeDefinitionMgr.shapeActionRotateFL(inputDefinition);
+                outItems.push({
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(rotatedDefinition),
                 });
                 break;
             }
@@ -202,7 +217,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                     upperItem.definition
                 );
                 outItems.push({
-                    item: new ShapeItem(stackedDefinition),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(stackedDefinition),
                 });
                 break;
             }
@@ -233,7 +248,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                     resultColor = mixedColor;
                 }
                 outItems.push({
-                    item: new ColorItem(resultColor),
+                    item: COLOR_ITEM_SINGLETONS[resultColor],
                 });
 
                 break;
@@ -251,7 +266,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                 );
 
                 outItems.push({
-                    item: new ShapeItem(colorizedDefinition),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(colorizedDefinition),
                 });
 
                 break;
@@ -278,11 +293,11 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                     colorItem.color
                 );
                 outItems.push({
-                    item: new ShapeItem(colorizedDefinition1),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(colorizedDefinition1),
                 });
 
                 outItems.push({
-                    item: new ShapeItem(colorizedDefinition2),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(colorizedDefinition2),
                 });
 
                 break;
@@ -309,8 +324,40 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                 );
 
                 outItems.push({
-                    item: new ShapeItem(colorizedDefinition),
+                    item: this.root.shapeDefinitionMgr.getShapeItemFromDefinition(colorizedDefinition),
                 });
+
+                break;
+            }
+
+            // FILTER
+            case enumItemProcessorTypes.filter: {
+                // TODO
+                trackProduction = false;
+
+                const item = itemsBySlot[0].item;
+
+                const network = entity.components.WiredPins.slots[0].linkedNetwork;
+                if (!network || !network.currentValue) {
+                    outItems.push({
+                        item,
+                        requiredSlot: 1,
+                    });
+                    break;
+                }
+
+                const value = network.currentValue;
+                if (value.equals(BOOL_TRUE_SINGLETON) || value.equals(item)) {
+                    outItems.push({
+                        item,
+                        requiredSlot: 0,
+                    });
+                } else {
+                    outItems.push({
+                        item,
+                        requiredSlot: 1,
+                    });
+                }
 
                 break;
             }
@@ -324,8 +371,8 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
                 assert(hubComponent, "Hub item processor has no hub component");
 
                 for (let i = 0; i < items.length; ++i) {
-                    const shapeItem = /** @type {ShapeItem} */ (items[i].item);
-                    hubComponent.queueShapeDefinition(shapeItem.definition);
+                    const item = /** @type {ShapeItem} */ (items[i].item);
+                    this.root.hubGoals.handleDefinitionDelivered(item.definition);
                 }
 
                 break;

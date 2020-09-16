@@ -13,8 +13,15 @@ import { LANGUAGES } from "../languages";
 
 const logger = createLogger("application_settings");
 
-const categoryGame = "game";
-const categoryApp = "app";
+/**
+ * @enum {string}
+ */
+export const enumCategories = {
+    general: "general",
+    userInterface: "userInterface",
+    performance: "performance",
+    advanced: "advanced",
+};
 
 export const uiScales = [
     {
@@ -122,7 +129,7 @@ export const allApplicationSettings = [
         options: Object.keys(LANGUAGES),
         valueGetter: key => key,
         textGetter: key => LANGUAGES[key].name,
-        category: categoryApp,
+        category: enumCategories.general,
         restartRequired: true,
         changeCb: (app, id) => null,
         magicValue: "auto-detect",
@@ -132,7 +139,7 @@ export const allApplicationSettings = [
         options: uiScales.sort((a, b) => a.size - b.size),
         valueGetter: scale => scale.id,
         textGetter: scale => T.settings.labels.uiScale.scales[scale.id],
-        category: categoryApp,
+        category: enumCategories.userInterface,
         restartRequired: false,
         changeCb:
             /**
@@ -142,8 +149,25 @@ export const allApplicationSettings = [
     }),
 
     new BoolSetting(
+        "soundsMuted",
+        enumCategories.general,
+        /**
+         * @param {Application} app
+         */
+        (app, value) => app.sound.setSoundsMuted(value)
+    ),
+    new BoolSetting(
+        "musicMuted",
+        enumCategories.general,
+        /**
+         * @param {Application} app
+         */
+        (app, value) => app.sound.setMusicMuted(value)
+    ),
+
+    new BoolSetting(
         "fullscreen",
-        categoryApp,
+        enumCategories.general,
         /**
          * @param {Application} app
          */
@@ -156,39 +180,21 @@ export const allApplicationSettings = [
     ),
 
     new BoolSetting(
-        "soundsMuted",
-        categoryApp,
-        /**
-         * @param {Application} app
-         */
-        (app, value) => app.sound.setSoundsMuted(value)
-    ),
-    new BoolSetting(
-        "musicMuted",
-        categoryApp,
-        /**
-         * @param {Application} app
-         */
-        (app, value) => app.sound.setMusicMuted(value)
-    ),
-
-    new BoolSetting(
         "enableColorBlindHelper",
-        categoryApp,
+        enumCategories.general,
         /**
          * @param {Application} app
          */
         (app, value) => null
     ),
 
-    // GAME
-    new BoolSetting("offerHints", categoryGame, (app, value) => {}),
+    new BoolSetting("offerHints", enumCategories.userInterface, (app, value) => {}),
 
     new EnumSetting("theme", {
         options: Object.keys(THEMES),
         valueGetter: theme => theme,
         textGetter: theme => T.settings.labels.theme.themes[theme],
-        category: categoryGame,
+        category: enumCategories.userInterface,
         restartRequired: false,
         changeCb:
             /**
@@ -205,7 +211,7 @@ export const allApplicationSettings = [
         options: autosaveIntervals,
         valueGetter: interval => interval.id,
         textGetter: interval => T.settings.labels.autosaveInterval.intervals[interval.id],
-        category: categoryGame,
+        category: enumCategories.advanced,
         restartRequired: false,
         changeCb:
             /**
@@ -214,21 +220,11 @@ export const allApplicationSettings = [
             (app, id) => null,
     }),
 
-    new EnumSetting("refreshRate", {
-        options: ["60", "100", "144", "165", "250", G_IS_DEV ? "10" : "500"],
-        valueGetter: rate => rate,
-        textGetter: rate => rate + " Hz",
-        category: categoryGame,
-        restartRequired: false,
-        changeCb: (app, id) => {},
-        enabled: !IS_DEMO,
-    }),
-
     new EnumSetting("scrollWheelSensitivity", {
         options: scrollWheelSensitivities.sort((a, b) => a.scale - b.scale),
         valueGetter: scale => scale.id,
         textGetter: scale => T.settings.labels.scrollWheelSensitivity.sensitivity[scale.id],
-        category: categoryGame,
+        category: enumCategories.advanced,
         restartRequired: false,
         changeCb:
             /**
@@ -241,17 +237,31 @@ export const allApplicationSettings = [
         options: movementSpeeds.sort((a, b) => a.multiplier - b.multiplier),
         valueGetter: multiplier => multiplier.id,
         textGetter: multiplier => T.settings.labels.movementSpeed.speeds[multiplier.id],
-        category: categoryGame,
+        category: enumCategories.advanced,
         restartRequired: false,
         changeCb: (app, id) => {},
     }),
 
-    new BoolSetting("alwaysMultiplace", categoryGame, (app, value) => {}),
-    new BoolSetting("enableTunnelSmartplace", categoryGame, (app, value) => {}),
-    new BoolSetting("vignette", categoryGame, (app, value) => {}),
-    new BoolSetting("compactBuildingInfo", categoryGame, (app, value) => {}),
-    new BoolSetting("disableCutDeleteWarnings", categoryGame, (app, value) => {}),
-    new BoolSetting("rotationByBuilding", categoryGame, (app, value) => {}),
+    new BoolSetting("alwaysMultiplace", enumCategories.advanced, (app, value) => {}),
+    new BoolSetting("enableTunnelSmartplace", enumCategories.advanced, (app, value) => {}),
+    new BoolSetting("vignette", enumCategories.userInterface, (app, value) => {}),
+    new BoolSetting("compactBuildingInfo", enumCategories.userInterface, (app, value) => {}),
+    new BoolSetting("disableCutDeleteWarnings", enumCategories.advanced, (app, value) => {}),
+    new BoolSetting("rotationByBuilding", enumCategories.advanced, (app, value) => {}),
+
+    new EnumSetting("refreshRate", {
+        options: ["60", "75", "100", "120", "144", "165", "250", "500"],
+        valueGetter: rate => rate,
+        textGetter: rate => rate + " Hz",
+        category: enumCategories.performance,
+        restartRequired: false,
+        changeCb: (app, id) => {},
+        enabled: !IS_DEMO,
+    }),
+
+    new BoolSetting("lowQualityMapResources", enumCategories.performance, (app, value) => {}),
+    new BoolSetting("disableTileGrid", enumCategories.performance, (app, value) => {}),
+    new BoolSetting("lowQualityTextures", enumCategories.performance, (app, value) => {}),
 ];
 
 export function getApplicationSettingById(id) {
@@ -281,6 +291,10 @@ class SettingsStorage {
         this.rotationByBuilding = true;
 
         this.enableColorBlindHelper = false;
+
+        this.lowQualityMapResources = false;
+        this.disableTileGrid = false;
+        this.lowQualityTextures = false;
 
         /**
          * @type {Object.<string, number>}
@@ -481,7 +495,7 @@ export class ApplicationSettings extends ReadWriteProxy {
     }
 
     getCurrentVersion() {
-        return 18;
+        return 21;
     }
 
     /** @param {{settings: SettingsStorage, version: number}} data */
@@ -557,6 +571,21 @@ export class ApplicationSettings extends ReadWriteProxy {
         if (data.version < 18) {
             data.settings.rotationByBuilding = true;
             data.version = 18;
+        }
+
+        if (data.version < 19) {
+            data.settings.lowQualityMapResources = false;
+            data.version = 19;
+        }
+
+        if (data.version < 20) {
+            data.settings.disableTileGrid = false;
+            data.version = 20;
+        }
+
+        if (data.version < 21) {
+            data.settings.lowQualityTextures = false;
+            data.version = 21;
         }
 
         return ExplainedResult.good();

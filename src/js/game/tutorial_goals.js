@@ -15,6 +15,7 @@ export const enumHubGoalRewards = {
     reward_tunnel: "reward_tunnel",
 
     reward_rotater_ccw: "reward_rotater_ccw",
+    reward_rotater_fl: "reward_rotater_fl",
     reward_miner_chainable: "reward_miner_chainable",
     reward_underground_belt_tier_2: "reward_underground_belt_tier_2",
     reward_splitter_compact: "reward_splitter_compact",
@@ -22,8 +23,6 @@ export const enumHubGoalRewards = {
     reward_painter_double: "reward_painter_double",
     reward_painter_quad: "reward_painter_quad",
     reward_storage: "reward_storage",
-
-    reward_wires: "reward_wires",
 
     reward_blueprints: "reward_blueprints",
     reward_freeplay: "reward_freeplay",
@@ -156,7 +155,7 @@ export const tutorialGoals = [
 
     // 17
     {
-        shape: "WrRgWrRg:CwCrCwCr:SgSgSgSg", // processors t4 (two varinats)
+        shape: "WrRgWrRg:CwCrCwCr:SgSgSgSg", // processors t4 (two variants)
         required: 120000,
         reward: enumHubGoalRewards.reward_painter_quad,
     },

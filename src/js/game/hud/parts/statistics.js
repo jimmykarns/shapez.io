@@ -1,11 +1,19 @@
 import { InputReceiver } from "../../../core/input_receiver";
-import { makeButton, makeDiv, removeAllChildren, capitalizeFirstLetter } from "../../../core/utils";
+import { makeButton, makeDiv, removeAllChildren } from "../../../core/utils";
 import { KeyActionMapper, KEYMAPPINGS } from "../../key_action_mapper";
 import { enumAnalyticsDataSource } from "../../production_analytics";
 import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { enumDisplayMode, HUDShapeStatisticsHandle } from "./statistics_handle";
 import { T } from "../../../translations";
+
+/**
+ * Capitalizes the first letter
+ * @param {string} str
+ */
+function capitalizeFirstLetter(str) {
+    return str.substr(0, 1).toUpperCase() + str.substr(1).toLowerCase();
+}
 
 export class HUDStatistics extends BaseHUDPart {
     createElements(parent) {
@@ -81,6 +89,7 @@ export class HUDStatistics extends BaseHUDPart {
         this.keyActionMapper = new KeyActionMapper(this.root, this.inputReciever);
 
         this.keyActionMapper.getBinding(KEYMAPPINGS.general.back).add(this.close, this);
+        this.keyActionMapper.getBinding(KEYMAPPINGS.ingame.menuClose).add(this.close, this);
         this.keyActionMapper.getBinding(KEYMAPPINGS.ingame.menuOpenStats).add(this.close, this);
 
         /** @type {Object.<string, HUDShapeStatisticsHandle>} */

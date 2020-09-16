@@ -1,0 +1,894 @@
+#
+#  GAME TRANSLATIONS
+#
+#  Translators:
+#
+#    Prosta4ok_ua 07.07.2020 — 04.08.2020
+#
+#  Contributing:
+#
+#    If you want to contribute, please make a pull request on this respository
+#    and I will have a look.
+#
+#  Placeholders:
+#
+#    Do *not* replace placeholders! Placeholders have a special syntax like
+#    `Hotkey: <key>`. They are encapsulated within angle brackets. The correct
+#    translation for this one in German for example would be: `Taste: <key>` (notice
+#    how the placeholder stayed '<key>' and was not replaced!)
+#
+#  Adding a new language:
+#
+#    If you want to add a new language, ask me in the Discord and I will setup
+#    the basic structure so the game also detects it.
+# Ґлосарій:
+# map мапа
+# keybinds гарячі клавіши
+# upgrade поліпшення
+# marker позначка
+# area ділянка
+# hub центр
+# range дальність
+# storage сховище
+# shape форма
+
+---
+steamPage:
+    # This is the short text appearing on the steam page
+    shortText: shapez.io — це гра про будування фабрик для автоматизації створення та обробки все більш складних форм на нескінченно розширюваній мапі.
+
+    # This is the text shown above the Discord link
+    discordLink: Офіційний Discord сервер — поговори зі мною!
+
+    # This is the long description for the steam page - It is contained here so you can help to translate it, and I will regulary update the store page.
+    # NOTICE:
+    # - Do not translate the first line (This is the gif image at the start of the store)
+    # - Please keep the markup (Stuff like [b], [list] etc) in the same format
+    longText: >-
+        [img]{STEAM_APP_IMAGE}/extras/store_page_gif.gif[/img]
+
+        shapez.io — це гра про будування фабрик для автоматизації створення та обробки все більш складних форм на нескінченно розширюваній мапі.
+        Після доставки потрібних форм ви просунетеся в грі та розблокуєте поліпшення, щоб пришвидшити свою фабрику.
+
+        Коли попит на форми зростає, вам доведеться збільшити масштаб своєї фабрики, щоб задовольнити попит. Однак не забувайте про ресурси, вам доведеться розширюватися на [b]нескінченній мапі[/b]!
+
+        Незабаром ви зможете змішути кольори і з їхньою допомогою фарбувати свої форми. Поєднуйте червоний, зелений та синій ресурси кольорів, щоб виготовити різноманітні кольори і пофарувати форми як вам заманеться.
+
+        У цій грі є 18 передових рівнів, які повинні утримувати вас годинами. Але не турбуйтеся, я постійно додаю новий вміст — ще багато чого заплановано!
+
+        Купуючи гру, ви отримуєте доступ до окремої версії, яка має додаткові функції, а також ви отримаєте доступ до нещодавно розроблених функцій.
+
+        [img]{STEAM_APP_IMAGE}/extras/header_standalone_advantages.png[/img]
+
+        [list]
+            [*] Темний режим
+            [*] Необмежені позначки
+            [*] Необмежені збереження
+            [*] Додаткові налаштування
+            [*] Незабаром: дроти й енергія! Гадаю, оновлення вийде у кінці липня 2020 року.
+            [*] Незабаром: більше рівнів.
+            [*] Дозволяє мені розвиватися далі shapez.io ❤️
+        [/list]
+
+        [img]{STEAM_APP_IMAGE}/extras/header_future_updates.png[/img]
+
+        Я оновлюю гру надпрочуд часто і намагаюся випускати оновлення щотижня!
+
+        [list]
+            [*] Різноманітні мапи та випробування (наприклад, мапи з перешкодами)
+            [*] Пазли (надайте потрібну форму з обмеженою площею/набором будівель)
+            [*] Режим історії, де будівлі матимуть вартість
+            [*] Генератор мап, який можна налаштувати (ресурс/розмір/щільність форми, зерно та багато іншого)
+            [*] Додаткові типи форм
+            [*] Поліпшення продуктивності (Гра вже працює досить добре!)
+            [*] Та багато чого іншого!
+        [/list]
+
+        [img]{STEAM_APP_IMAGE}/extras/header_open_source.png[/img]
+
+        Будь-хто може зробити внесок, я активно беру участь у спільноті і намагаюся оцінити всі пропозиції і відгуки, та взяти до уваги, де це можливо.
+        Не забудьте перевірити мою дошку Trello заради повної дорожньої карти!
+
+        [img]{STEAM_APP_IMAGE}/extras/header_links.png[/img]
+
+        [list]
+            [*] [url=https://discord.com/invite/HN7EVzV]Офіційний Discord[/url]
+            [*] [url=https://trello.com/b/ISQncpJP/shapezio]Дорожня карта[/url]
+            [*] [url=https://www.reddit.com/r/shapezio]Спільнота на Reddit[/url]
+            [*] [url=https://github.com/tobspr/shapez.io]Вихідний код на GitHub[/url]
+            [*] [url=https://github.com/tobspr/shapez.io/blob/master/translations/README.md]Допоможіть з перекладом[/url]
+        [/list]
+
+global:
+    loading: Завантаження
+    error: Помилка
+
+    # How big numbers are rendered, e.g. "10,000"
+    thousandsDivider: " "
+
+    # What symbol to use to seperate the integer part from the fractional part of a number, e.g. "0.4"
+    decimalSeparator: ","
+
+    # The suffix for large numbers, e.g. 1.3k, 400.2M, etc.
+    suffix:
+        thousands: тис.
+        millions: млн
+        billions: млрд
+        trillions: трлн
+
+    # Shown for infinitely big numbers
+    infinite: неск.
+
+    time:
+        # Used for formatting past time dates
+        oneSecondAgo: одну секунду тому
+        xSecondsAgo: <x> секунд тому
+        oneMinuteAgo: 1 хвилину тому
+        xMinutesAgo: <x> хвилин тому
+        oneHourAgo: одну годину тому
+        xHoursAgo: <x> годин тому
+        oneDayAgo: один день тому
+        xDaysAgo: <x> днів тому
+
+        # Short formats for times, e.g. '5h 23m'
+        secondsShort: <seconds>сек.
+        minutesAndSecondsShort: <minutes>хв. <seconds>сек.
+        hoursAndMinutesShort: <hours>год. <minutes>хв.
+
+        xMinutes: <x> хв.
+
+    keys:
+        tab: TAB
+        control: CTRL
+        alt: ALT
+        escape: ESC
+        shift: SHIFT
+        space: SPACE
+
+demoBanners:
+    # This is the "advertisement" shown in the main menu and other various places
+    title: Демоверсія
+    intro: >-
+        Завантажте окрему версію, щоб розблокувати всі функції!
+
+mainMenu:
+    play: Грати
+    continue: Продовжити
+    newGame: Нова гра
+    changelog: Змінопис
+    subreddit: Reddit
+    importSavegame: Імпортувати
+    openSourceHint: Ця гра з відкритим вихідним кодом!
+    discordLink: Офіційний Discord сервер
+    helpTranslate: Допоможіть з перекладом!
+    madeBy: Зробив <author-link>
+
+    # This is shown when using firefox and other browsers which are not supported.
+    browserWarning: >-
+        Вибачте, але гра, як відомо, працює повільно у вашому браузері! Завантажте окрему версію чи хром, щоб отримати більше задоволення від гри.
+
+    savegameLevel: Рівень <x>
+    savegameLevelUnknown: Невідомий рівень
+
+dialogs:
+    buttons:
+        ok: Гаразд
+        delete: Видалити
+        cancel: Скасувати
+        later: Пізніше
+        restart: Перезавантажити
+        reset: Скинути
+        getStandalone: Завантажити гру
+        deleteGame: Я знаю, що роблю
+        viewUpdate: Переглянути оновлення
+        showUpgrades: Показати поліпшення
+        showKeybindings: Показати прив’язки клавіш
+
+    importSavegameError:
+        title: Помилка при імпортуванні
+        text: >-
+            Не вдалося імпортувати вашу збережену гру:
+
+    importSavegameSuccess:
+        title: Збереження імпортовано
+        text: >-
+            Вашу збережену гру успішно імпортовано.
+
+    gameLoadFailure:
+        title: Гра поламана
+        text: >-
+            Не вдалося завантажити вашу збережену гру.
+
+    confirmSavegameDelete:
+        title: Підтвердження
+        text: >-
+            Ви справді хочете видалити гру?
+
+    savegameDeletionError:
+        title: Виникла помилка при видаленні
+        text: >-
+            Не вдалося видалити збережену гру.
+
+    restartRequired:
+        title: Потрібне перезавантаження
+        text: >-
+            Перезавантажте гру, щоб налаштування вступили в дію.
+
+    editKeybinding:
+        title: Зміна гарячої клавіши
+        desc: Натисніть клавішу, яку ви хочете призначити, або escape для скасування.
+
+    resetKeybindingsConfirmation:
+        title: Скинути гарячу клавіші
+        desc: Це скине всі прив'язки клавіш до їхніх значень за замовчуванням. Будь ласка, підтвердіть.
+
+    keybindingsResetOk:
+        title: Скинути гарячі клавіші
+        desc: Гарячі клавіши скинемуться до їхніх початкових значень!
+
+    featureRestriction:
+        title: Демоверсія
+        desc: Ви спробували отримати доступ до функції (<feature>), яка недоступна в демонстраційній версії. Подумайте про отримання окремої версії, щоб насолодитися грою сповна!
+
+    oneSavegameLimit:
+        title: Обмежені збереження
+        desc: Ви можете мати лише одне збереження одночасно в демоверсії. Будь ласка, видаліть збереження чи завантажте окрему версію гри!
+
+    updateSummary:
+        title: Нове оновлення!
+        desc: >-
+            Ось зміни з вашої останньої гри:
+
+    upgradesIntroduction:
+        title: Розблокування поліпшень
+        desc: >-
+            Усі форми, що ви виробляєте, можуть використовуватися для розблокування поліпшення - <strong>Не зруйнуйте свої старі фабрики!<strong>
+            Вкладку з поліпшеннями можна знайти в правому верхньому куті екрана.
+
+    massDeleteConfirm:
+        title: Підтвердження видалення
+        desc: >-
+            Ви видаляєте багато будівль (<count>, якщо бути точним)! Ви справді хочете зробити це?
+
+    massCutConfirm:
+        title: Підтвердження вирізання
+        desc: >-
+            Ви вирізаєте багато будівль(<count>, якщо бути точним)! Ви справді хочете зробити це?
+
+    massCutInsufficientConfirm:
+        title: Підтвердити вирізання
+        desc: >-
+            Ви не можете дозволити собі вставити цю область! Ви справді хочете вирізати це?
+
+    blueprintsNotUnlocked:
+        title: Ще не розблоковано
+        desc: >-
+            Досягніть 13-го рівня, щоб розблокувати креслення!
+
+    keybindingsIntroduction:
+        title: Корисні гарячі клавіши
+        desc: >-
+            Гра має багато гарячих клавіш, що полегшують будівництво великих фабрик.
+            Ось декілька, але обов’язково <strong>ознайомтеся з прив’язками клавіш</strong>!<br><br>
+            <code class='keybinding'>CTRL</code> + тягніть: виділити зону.<br>
+            <code class='keybinding'>SHIFT</code>: тримайте, щоб розмістити декілька одного будинку.<br>
+            <code class='keybinding'>ALT</code>: змінити орієнтацію розміщеної конвеєрної стрічки.<br>
+
+    createMarker:
+        title: Нова позначка
+        titleEdit: Редагувати позначку
+        desc: Дайте їй змістовну назву. Ви також можете додати <strong>короткий ключ</strong> форми, що можно згенерувати <a href="https://viewer.shapez.io" target="_blank">тут</a>.
+
+    markerDemoLimit:
+        desc: Ви можете створити тільки 2 позначки в демоверсії. Отримайте окрему версії для створення необмеженної кількості позначок.
+
+    exportScreenshotWarning:
+        title: Експортувати зняток
+        desc: Ви просили експортувати свою базу як знімок екрана. Зверніть увагу, що для великої бази це може бути досить повільним процесом і може навіть зруйнувати вашу гру!
+
+ingame:
+    # This is shown in the top left corner and displays useful keybindings in
+    # every situation
+    keybindingsOverlay:
+        moveMap: Рухатися
+        selectBuildings: Виділити будівлі
+        stopPlacement: Зупинити розміщення
+        rotateBuilding: Повернути будівлю
+        placeMultiple: Розмістити декілька
+        reverseOrientation: Змінити орієнтацію
+        disableAutoOrientation: Вимкнути автоматичну орієнтацію
+        toggleHud: Перемкнути інтерфейс
+        placeBuilding: Розмістити будівлю
+        createMarker: Створити позначку
+        delete: Видалити
+        pasteLastBlueprint: Вставити останнє креслення
+        lockBeltDirection: Увімкнути стрічковий планувальник
+        plannerSwitchSide: Змінити сторону планувальника
+        cutSelection: Вирізати
+        copySelection: Скопіювати
+        clearSelection: Очистити виділене
+        pipette: Піпетка
+        switchLayers: Змінити шари
+
+    # Names of the colors, used for the color blind mode
+    colors:
+        red: Червоний
+        green: Зелений
+        blue: Синій
+        yellow: Жовтий
+        purple: Фіолетовий
+        cyan: Блакитний
+        white: Білий
+        black: Чорний
+        uncolored: Без кольору
+
+    # Everything related to placing buildings (I.e. as soon as you selected a building
+    # from the toolbar)
+    buildingPlacement:
+        # Buildings can have different variants which are unlocked at later levels,
+        # and this is the hint shown when there are multiple variants available.
+        cycleBuildingVariants: Натисніть <key> для циклу варіантів.
+
+        # Shows the hotkey in the ui, e.g. "Hotkey: Q"
+        hotkeyLabel: >-
+            Hotkey: <key>
+
+        infoTexts:
+            speed: Швидкість
+            range: Дальність
+            storage: Сховище
+            oneItemPerSecond: 1 предмет за сек.
+            itemsPerSecond: <x> предмет. за сек
+            itemsPerSecondDouble: (x2)
+
+            tiles: <x> плиток
+
+    # The notification when completing a level
+    levelCompleteNotification:
+        # <level> is replaced by the actual level, so this gets 'Level 03' for example.
+        levelTitle: Рівень <level>
+        completed: Завершено
+        unlockText: Розблоковано «<reward>»!
+        buttonNextLevel: Наступний рівень
+
+    # Notifications on the lower right
+    notifications:
+        newUpgrade: Нове оновлення розблоковано!
+        gameSaved: Вашу гру збережено.
+
+    # The "Upgrades" window
+    shop:
+        title: Поліпшення
+        buttonUnlock: Поліпшення
+
+        # Gets replaced to e.g. "Tier IX"
+        tier: Ранг <x>
+
+        # The roman number for each tier
+        tierLabels: [I, II, III, IV, V, VI, VII, VIII, IX, X]
+
+        maximumLevel: МАКСИМАЛЬНИЙ РІВЕНЬ (Швидкість <currentMult>х)
+
+    # The "Statistics" window
+    statistics:
+        title: Статистика
+        dataSources:
+            stored:
+                title: Зберігається
+                description: Відображає кількість збережених фігур у вашому центрі.
+            produced:
+                title: Виробляється
+                description: Відображає всі форми вашої цілої фабрики, що виробляються, включаючи проміжні продукти.
+            delivered:
+                title: Доставлено
+                description: Відображає форми, що доставляються до центру.
+        noShapesProduced: Жодної форми поки не випускається.
+
+        # Displays the shapes per minute, e.g. '523 / m'
+        shapesPerMinute: <shapes> за хв.
+
+    # Settings menu, when you press "ESC"
+    settingsMenu:
+        playtime: У грі
+
+        buildingsPlaced: Будівлі
+        beltsPlaced: Стрічки
+
+        buttons:
+            continue: Продовжити
+            settings: Налаштування
+            menu: Повернутися до меню
+
+    # Bottom left tutorial hints
+    tutorialHints:
+        title: Потрібна допомога?
+        showHint: Показати підказку
+        hideHint: Закрити
+
+    # When placing a blueprint
+    blueprintPlacer:
+        cost: Вартість
+
+    # Map markers
+    waypoints:
+        waypoints: Позначки
+        hub: Центр
+        description: ЛКМ на позначку, щоб перейти до неї, ПКМ для видалення<br><br>Натисніть <keybinding> для створення позначки з поточного виду або <strong>ПКМ</strong>, щоб створити позначку в обраному місці.
+        creationSuccessNotification: Позначку створено.
+
+    # Shape viewer
+    shapeViewer:
+        title: Шари
+        empty: Пустий
+        copyKey: Копіювати ключ
+
+    # Interactive tutorial
+    interactiveTutorial:
+        title: Навчання
+        hints:
+            1_1_extractor: Розмістіть <strong>екстрактор</strong> поверх <strong>фігури кола</strong>, щоб отримати її!
+            1_2_conveyor: >-
+                З’єднайте екстрактор з вашим центром за допомогою <strong>конвеєрної стрічки</strong>!<br><br>Підказка: <strong>Натисніть і протягніть</strong> стрічку вашою мишею.
+
+            1_3_expand: >-
+                У цій грі <strong>ВАМ НЕ ПОТРІБНО БЕЗДІЯТИ</strong>! Будуйте більше екстракторів і стрічок, щоб виконати свою мету швидше.<br><br>Підказка: Утримуйте <strong>SHIFT</strong>, щоб розмістити багато екстракторів, і використовуйте <strong>R</strong>, щоб обертати їх.
+
+# All shop upgrades
+shopUpgrades:
+    belt:
+        name: Стрічки, розподілювачі і тунелі
+        description: Швидкість x<currentMult> → x<newMult>
+    miner:
+        name: Видобуток
+        description: Швидкість x<currentMult> → x<newMult>
+    processors:
+        name: Різання, обертання й укладання
+        description: Швидкість x<currentMult> → x<newMult>
+    painting:
+        name: Змішування і малювання
+        description: Швидкість x<currentMult> → x<newMult>
+
+# Buildings and their name / description
+buildings:
+    hub:
+        deliver: Доставте,
+        toUnlock: щоб розблокувати
+        levelShortcut: РІВ
+
+    belt:
+        default:
+            name: &belt Конвеєрна стрічка
+            description: Транспортує предмети, утримуйте і перетягуйте для розміщення декількох.
+
+    wire:
+        default:
+            name: &wire Дріт
+            description: Дозволяє передавати енергію
+
+    # Internal name for the Extractor
+    miner:
+        default:
+            name: &miner Екстрактор
+            description: Розмістіть над формою чи кольором, який хочете видобути.
+
+        chainable:
+            name: Екстрактор (Ланц.)
+            description: Розмістіть над формою чи кольором, який хочете видобути. Можна об’єднати в ланцюг.
+
+    # Internal name for the Tunnel
+    underground_belt:
+        default:
+            name: &underground_belt Тунель
+            description: Дозволяє транспортувати ресурси під будівлями та стрічками.
+
+        tier2:
+            name: Тунель, ранг II
+            description: Дозволяє транспортувати ресурси під будівлями та стрічками.
+
+    # Internal name for the Balancer
+    splitter:
+        default:
+            name: &splitter Розподілювач
+            description: Multifunctional - Evenly distributes all inputs onto all outputs.
+
+        compact:
+            name: З’єднувач
+            description: Об’єднує дві конвеєрні стрічки в одну. Займає усього на всього одну клітину.
+
+        compact-inverse:
+            name: З’єднувач
+            description: Об’єднує дві конвеєрні стрічки в одну. Займає усього на всього одну клітину.
+
+    cutter:
+        default:
+            name: &cutter Різчик
+            description: Розрізає форми зверху вниз і виводить обидві половинки. <strong>Якщо ви використовуєте лише одну частину, не забудьте знищити іншу частину, інакше вона застрягне в механізмі!</strong>
+        quad:
+            name: Різчик (4 вих.)
+            description: Розрізає форми на 4 частини. <strong>Якщо ви використовуєте лише одну частину, не забудьте знищити інші, інакше вони застрягнуть в механізмі!</strong>
+
+    advanced_processor:
+        default:
+            name: &advanced_processor Передовий процесор
+            description: Покращена обробка форм.
+
+    rotater:
+        default:
+            name: &rotater Обертач
+            description: Обертає форми за годинниковою стрілкою на 90 градусів.
+        ccw:
+            name: Обертач (-90)
+            description: Обертає форми проти годинникової стрілки на 90 градусів.
+        fl:
+            name: Обертач (180)
+            description: Обертає форми на 180 градусів.
+
+    stacker:
+        default:
+            name: &stacker Укладальник
+            description: Stacks both items. If they can not be merged, the right item is placed above the left item.
+
+    mixer:
+        default:
+            name: &mixer Змішувач кольо8рів
+            description: Змішує два кольори за допомогою добавки.
+
+    painter:
+        default:
+            name: &painter Painter
+            description: &painter_desc Colors the whole shape on the left input with the color from the top input.
+
+        mirrored:
+            name: *painter
+            description: *painter_desc
+
+        double:
+            name: Painter (Double)
+            description: Colors the shapes on the left inputs with the color from the top input.
+        quad:
+            name: Painter (Quad)
+            description: Allows you to color each quadrant of the shape with a different color.
+
+    trash:
+        default:
+            name: &trash Trash
+            description: Accepts inputs from all sides and destroys them. Forever.
+
+        storage:
+            name: Storage
+            description: Stores excess items, up to a given capacity. Can be used as an overflow gate.
+
+    energy_generator:
+        deliver: Deliver
+
+        # This will be shown before the amount, so for example 'For 123 Energy'
+        toGenerateEnergy: For
+
+        default:
+            name: &energy_generator Energy Generator
+            description: Generates energy by consuming shapes. Each energy generator requires a different shape.
+
+    wire_crossings:
+        default:
+            name: &wire_crossings Wire Splitter
+            description: Splits a wire into two
+
+        merger:
+            name: Wire Merger
+            description: Merges two wires into one
+
+storyRewards:
+    # Those are the rewards gained from completing the store
+    reward_cutter_and_trash:
+        title: Різання фігур
+        desc: Ви тільки-но розблокували <strong>різця</strong>. Він розрізає фігури наполовину з <strong>вершини до низу</strong> незалежно від його орієнтації!<br><br>Обов’язково позбудьтесь відходів або  <strong>він зупиниться</strong>. Для цього є сміттєбак, який знищує все, що входить в нього.
+
+    reward_rotater:
+        title: Rotating
+        desc: The <strong>rotater</strong> has been unlocked! It rotates shapes clockwise by 90 degrees.
+
+    reward_painter:
+        title: Painting
+        desc: >-
+            The <strong>painter</strong> has been unlocked - Extract some color veins (just as you do with shapes) and combine it with a shape in the painter to color them!<br><br>PS: If you are colorblind, there is a <strong>colorblind mode</strong> in the settings!
+
+    reward_mixer:
+        title: Color Mixing
+        desc: The <strong>mixer</strong> has been unlocked - Combine two colors using <strong>additive blending</strong> with this building!
+
+    reward_stacker:
+        title: Combiner
+        desc: You can now combine shapes with the <strong>combiner</strong>! Both inputs are combined, and if they can be put next to each other, they will be <strong>fused</strong>. If not, the right input is <strong>stacked on top</strong> of the left input!
+
+    reward_splitter:
+        title: Splitter/Merger
+        desc: Багатофункціональний <strong> балансир </strong> було розблоковано. Його можна використовувати для створення великих фабрик, <strong>розділяючи та об’єднуючи предмети </strong> на кілька стрічок!<br><br>
+
+    reward_tunnel:
+        title: Tunnel
+        desc: The <strong>tunnel</strong> has been unlocked - You can now tunnel items through belts and buildings with it!
+
+    reward_rotater_ccw:
+        title: CCW Rotating
+        desc: You have unlocked a variant of the <strong>rotater</strong> - It allows you to rotate shapes counter-clockwise! To build it, select the rotater and <strong>press 'T' to cycle through its variants</strong>!
+
+    reward_miner_chainable:
+        title: Chaining Extractor
+        desc: You have unlocked the <strong>chaining extractor</strong>! It can <strong>forward its resources</strong> to other extractors so you can more efficiently extract resources!
+
+    reward_underground_belt_tier_2:
+        title: Tunnel Tier II
+        desc: You have unlocked a new variant of the <strong>tunnel</strong> - It has a <strong>bigger range</strong>, and you can also mix-n-match those tunnels now!
+
+    reward_splitter_compact:
+        title: Compact Balancer
+        desc: >-
+            You have unlocked a compact variant of the <strong>balancer</strong> - It accepts two inputs and merges them into one belt!
+
+    reward_cutter_quad:
+        title: Quad Cutting
+        desc: You have unlocked a variant of the <strong>cutter</strong> - It allows you to cut shapes in <strong>four parts</strong> instead of just two!
+
+    reward_painter_double:
+        title: Double Painting
+        desc: You have unlocked a variant of the <strong>painter</strong> - It works as the regular painter but processes <strong>two shapes at once</strong> consuming just one color instead of two!
+
+    reward_painter_quad:
+        title: Quad Painting
+        desc: You have unlocked a variant of the <strong>painter</strong> - It allows you to paint each part of the shape individually!
+
+    reward_storage:
+        title: Storage Buffer
+        desc: You have unlocked a variant of the <strong>trash</strong> - It allows you to store items up to a given capacity!
+
+    reward_freeplay:
+        title: Freeplay
+        desc: You did it! You unlocked the <strong>free-play mode</strong>! This means that shapes are now randomly generated! (No worries, more content is planned for the standalone!)
+
+    reward_blueprints:
+        title: Blueprints
+        desc: You can now <strong>copy and paste</strong> parts of your factory! Select an area (Hold CTRL, then drag with your mouse), and press 'C' to copy it.<br><br>Pasting it is <strong>not free</strong>, you need to produce <strong>blueprint shapes</strong> to afford it! (Those you just delivered).
+
+    # Special reward, which is shown when there is no reward actually
+    no_reward:
+        title: Наступний рівень
+        desc: >-
+            Цей рівень не дав нагороди, але в наступному... щось буде. <br><br> До речі, краще не руйнуйте свою поточну фабрику. Вам знадобляться всі ті форми пізніше, щоб <strong>розблокувати поліпшення</strong>!
+
+    no_reward_freeplay:
+        title: Наступний рівень
+        desc: >-
+            Вітаємо! До речі, більше контенту планується в окремій версії!
+
+settings:
+    title: Налаштування
+    categories:
+        general: Загальне
+        userInterface: Користувацький інтерфейс
+        advanced: Передове
+
+    versionBadges:
+        dev: Development
+        staging: Staging
+        prod: Production
+    buildDate: Built <at-date>
+
+    labels:
+        uiScale:
+            title: Масштаб інтерфейсу
+            description: >-
+                Змінює розмір користувацього інтерфейсу. Інтерфейс усе ще буде масштабуватися залежно від роздільної здатності вашого пристрою, але цей параметр контролює масштаб масштабування.
+            scales:
+                super_small: Надзвичайно малий
+                small: Малий
+                regular: Звичайний
+                large: Великий
+                huge: Величезний
+
+        autosaveInterval:
+            title: Проміжок між автозбереженнями
+            description: >-
+                Контролює, як часто гра автоматично зберігатиметься. Ви також можете повністю вимкнути його тут.
+
+            intervals:
+                one_minute: 1 хвилина
+                two_minutes: 2 хвилини
+                five_minutes: 5 хвилин
+                ten_minutes: 10 хвилин
+                twenty_minutes: 20 хвилин
+                disabled: Вимкнено
+
+        scrollWheelSensitivity:
+            title: Чутливість масштабування
+            description: >-
+                Змінює наскільки чутливе масштабування (колесо миші або трекпад).
+            sensitivity:
+                super_slow: Надзвичайно повільна
+                slow: Повільна
+                regular: Звичайна
+                fast: Швидка
+                super_fast: Надзвичайно швидка
+
+        movementSpeed:
+            title: Швидкість руху
+            description: >-
+                Змінює Змінює швидкість руху бачення при використанні клавіатури.
+            speeds:
+                super_slow: Надзвичайно повільна
+                slow: Повільна
+                regular: Звичайна
+                fast: Швидка
+                super_fast: Надзвичайно швидка
+                extremely_fast: Екстремально швидка
+
+        language:
+            title: Мова
+            description: >-
+                Змініть мову. Усі переклади зроблені користувачами і можуть бути незавершеними!
+
+        enableColorBlindHelper:
+            title: Режим високої контрастності
+            description: >-
+                Дозволяє використовувати різні інструменти, які дозволяють грати в гру, якщо ви є дальтоніком.
+
+        fullscreen:
+            title: Повноекранний режим
+            description: >-
+                Щоб повністю насолодитися грою, рекомендується грати у повноекранному режимі. Не доступно тільки в демоверсії.
+
+        soundsMuted:
+            title: Заглушити звуки
+            description: >-
+                Якщо увімкнено, то вимикає всі звукові ефекти.
+
+        musicMuted:
+            title: Заглушити музику
+            description: >-
+                Якщо увімкнено, то вимикає всю музику.
+
+        theme:
+            title: Тема гри
+            description: >-
+                Оберіть тему гри (світлу чи темну).
+            themes:
+                dark: Темна
+                light: Світла
+
+        refreshRate:
+            title: Частота оновлення
+            description: >-
+                Якщо ви маєте 144-герцовий монітор, то змініть частоту оновлення тут, щоб гра правильно працювала при більшій швидкості оновлення. Це може фактично знизити FPS, якщо ваш комп’ютер занадто повільний.
+
+        alwaysMultiplace:
+            title: Мультирозміщення
+            description: >-
+                Якщо ввімкнено, всі будівлі залишатимуться вибраними після розміщення, доки ви не скасуєте це. Це еквівалентно постійному утримуванню SHIFT.
+
+        offerHints:
+            title: Підказки & посібники
+            description: >-
+                Якщо увімкнено, то пропонує підказки та посібники під час гри. Також приховує певні елементи інтерфейсу до заданого рівня, щоб полегшити потрапляння в гру.
+
+        enableTunnelSmartplace:
+            title: Розумні Tunnels
+            description: >-
+                When enabled, placing tunnels will automatically remove unnecessary belts. This also enables you to drag tunnels and excess tunnels will get removed.
+
+        vignette:
+            title: Vignette
+            description: >-
+                Enables the vignette, which darkens the screen corners and makes text easier to read.
+
+        rotationByBuilding:
+            title: Rotation by building type
+            description: >-
+                Each building type remembers the rotation you last set it to individually. This may be more comfortable if you frequently switch between placing different building types.
+
+        compactBuildingInfo:
+            title: Compact Building Infos
+            description: >-
+                Shortens info boxes for buildings by only showing their ratios. Otherwise a description and image is shown.
+
+        disableCutDeleteWarnings:
+            title: Disable Cut/Delete Warnings
+            description: >-
+                Disables the warning dialogs brought up when cutting/deleting more than 100 entities.
+
+keybindings:
+    title: Гарячі клавіши
+    hint: >-
+        Tip: Be sure to make use of CTRL, SHIFT and ALT! They enable different placement options.
+
+    resetKeybindings: Скинути гарячі клавіші
+
+    categoryLabels:
+        general: Застосунок
+        ingame: Гра
+        navigation: Navigating
+        placement: Placement
+        massSelect: Mass Select
+        buildings: Building Shortcuts
+        placementModifiers: Placement Modifiers
+
+    mappings:
+        confirm: Підтвердити
+        back: Назад
+        mapMoveUp: Move Up
+        mapMoveRight: Move Right
+        mapMoveDown: Move Down
+        mapMoveLeft: Move Left
+        mapMoveFaster: Move Faster
+        centerMap: Center Map
+
+        mapZoomIn: Приблизити
+        mapZoomOut: Віддалити
+        createMarker: Створити позначку
+
+        menuOpenShop: Поліпшення
+        menuOpenStats: Статистика
+        menuClose: Закрити меню
+
+        toggleHud: Toggle HUD
+        toggleFPSInfo: Toggle FPS and Debug Info
+        switchLayers: Switch layers
+        exportScreenshot: Export whole Base as Image
+        belt: *belt
+        splitter: *splitter
+        underground_belt: *underground_belt
+        miner: *miner
+        cutter: *cutter
+        advanced_processor: *advanced_processor
+        rotater: *rotater
+        stacker: *stacker
+        mixer: *mixer
+        energy_generator: *energy_generator
+        painter: *painter
+        trash: *trash
+        wire: *wire
+
+        pipette: Pipetteї
+        rotateWhilePlacing: Повернути
+        rotateInverseModifier: >-
+            Modifier: Rotate CCW instead
+        cycleBuildingVariants: Cycle Variants
+        confirmMassDelete: Видалити ділянку
+        pasteLastBlueprint: Paste last blueprint
+        cycleBuildings: Cycle Buildings
+        lockBeltDirection: Enable belt planner
+        switchDirectionLockSide: >-
+            Planner: Switch side
+
+        massSelectStart: Hold and drag to start
+        massSelectSelectMultiple:
+        massSelectCopy: Копіювати ділянку
+        massSelectCut: Вирізати ділянку
+
+        placementDisableAutoOrientation: Вимкнути автоматичну орієнтацію
+        placeMultiple: Stay in placement mode
+        placeInverse: Invert automatic belt orientation
+
+about:
+    title: Про гру
+    body: >-
+        Ця гра з відкритим вихідним кодом і розроблена <a href="https://github.com/tobspr" target="_blank">Tobias Springer</a> (це я).<br><br>
+
+        Якщо ви хочете зробити внесок, то йдіть на <a href="<githublink>" target="_blank">github shapez.io</a>.<br><br>
+
+        Ця гра не була б можливою без великої Discord спільноти навколо моїх ігор. Гадаю, вам дійсно слід долучитися до <a href="<discordlink>" target="_blank">серверу в discord</a>!<br><br>
+
+        Звуковий трек був зроблений гравцем <a href="https://soundcloud.com/pettersumelius" target="_blank">Peppsen</a> — він просто приголомшливий.<br><br>
+
+        І нарешті, величезна подяка моєму найкращому другу <a href="https://github.com/niklas-dahl" target="_blank">Niklas</a>, бо без наших сеансів у факторіо ця гра ніколи б не існувала.
+
+changelog:
+    title: Змінопис
+
+demo:
+    features:
+        restoringGames: Відновлення збережень
+        importingGames: Імпортування збережень
+        oneGameLimit: Обмежено одним збереженням
+        customizeKeybindings: Налаштування гарячих клавіш
+        exportingBase: Експортування цілої бази у вигляді зображення
+
+    settingNotAvailable: Недоступно в демоверсії.

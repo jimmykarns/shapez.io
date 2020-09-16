@@ -1,12 +1,12 @@
 import { enumDirection, enumInvertedDirections, Vector } from "../../core/vector";
 import { types } from "../../savegame/serialization";
-import { BaseItem, enumItemType } from "../base_item";
+import { BaseItem } from "../base_item";
 import { Component } from "../component";
 
 /** @typedef {{
  * pos: Vector,
  * directions: enumDirection[],
- * filter?: enumItemType
+ * filter?: ItemType
  * }} ItemAcceptorSlot */
 
 /**
@@ -17,28 +17,15 @@ import { Component } from "../component";
  *  acceptedDirection: enumDirection
  * }} ItemAcceptorLocatedSlot */
 
+/** @typedef {{
+ * pos: Vector,
+ * directions: enumDirection[],
+ * filter?: ItemType
+ * }} ItemAcceptorSlotConfig */
+
 export class ItemAcceptorComponent extends Component {
     static getId() {
         return "ItemAcceptor";
-    }
-
-    static getSchema() {
-        return {
-            slots: types.array(
-                types.structured({
-                    pos: types.vector,
-                    directions: types.array(types.enum(enumDirection)),
-                    filter: types.nullable(types.enum(enumItemType)),
-                })
-            ),
-            animated: types.bool,
-            beltUnderlays: types.array(
-                types.structured({
-                    pos: types.vector,
-                    direction: types.enum(enumDirection),
-                })
-            ),
-        };
     }
 
     duplicateWithoutContents() {
@@ -52,52 +39,34 @@ export class ItemAcceptorComponent extends Component {
             });
         }
 
-        const beltUnderlaysCopy = [];
-        for (let i = 0; i < this.beltUnderlays.length; ++i) {
-            const underlay = this.beltUnderlays[i];
-            beltUnderlaysCopy.push({
-                pos: underlay.pos.copy(),
-                direction: underlay.direction,
-            });
-        }
-
         return new ItemAcceptorComponent({
             slots: slotsCopy,
-            beltUnderlays: beltUnderlaysCopy,
-            animated: this.animated,
         });
     }
 
     /**
      *
      * @param {object} param0
-     * @param {Array<{pos: Vector, directions: enumDirection[], filter?: enumItemType}>} param0.slots The slots from which we accept items
-     * @param {boolean=} param0.animated Whether to animate item consumption
-     * @param {Array<{pos: Vector, direction: enumDirection}>=} param0.beltUnderlays Where to render belt underlays
+     * @param {Array<ItemAcceptorSlotConfig>} param0.slots The slots from which we accept items
      */
-    constructor({ slots = [], beltUnderlays = [], animated = true }) {
+    constructor({ slots = [] }) {
         super();
-
-        this.animated = animated;
 
         /**
          * Fixes belt animations
-         * @type {Array<{ item: BaseItem, slotIndex: number, animProgress: number, direction: enumDirection}>}
+         * @type {Array<{ item: BaseItem, slotIndex: number, animProgress: number, direction: enumDirection }>}
          */
         this.itemConsumptionAnimations = [];
-
-        /* Which belt underlays to render */
-        this.beltUnderlays = beltUnderlays;
 
         this.setSlots(slots);
     }
 
     /**
      *
-     * @param {Array<{pos: Vector, directions: enumDirection[], filter?: enumItemType}>} slots
+     * @param {Array<ItemAcceptorSlotConfig>} slots
      */
     setSlots(slots) {
-        /** @type {Array<{pos: Vector, directions: enumDirection[], filter?: enumItemType}>} */
+        /** @type {Array<ItemAcceptorSlot>} */
         this.slots = [];
         for (let i = 0; i < slots.length; ++i) {
             const slot = slots[i];
@@ -105,7 +74,7 @@ export class ItemAcceptorComponent extends Component {
                 pos: slot.pos,
                 directions: slot.directions,
 
-                // Which type of item to accept (shape | color | all) @see enumItemType
+                // Which type of item to accept (shape | color | all) @see ItemType
                 filter: slot.filter,
             });
         }
@@ -128,14 +97,12 @@ export class ItemAcceptorComponent extends Component {
      * @param {BaseItem} item
      */
     onItemAccepted(slotIndex, direction, item) {
-        if (this.animated) {
-            this.itemConsumptionAnimations.push({
-                item,
-                slotIndex,
-                direction,
-                animProgress: 0.0,
-            });
-        }
+        this.itemConsumptionAnimations.push({
+            item,
+            slotIndex,
+            direction,
+            animProgress: 0.0,
+        });
     }
 
     /**

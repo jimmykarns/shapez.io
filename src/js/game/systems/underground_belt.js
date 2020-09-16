@@ -95,7 +95,7 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
             let matchingEntrance = null;
             for (let i = 0; i < range; ++i) {
                 currentPos.addInplace(offset);
-                const contents = this.root.map.getTileContent(currentPos);
+                const contents = this.root.map.getTileContent(currentPos, entity.layer);
                 if (!contents) {
                     continue;
                 }
@@ -128,7 +128,7 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
             for (let i = 0; i < matchingEntrance.range; ++i) {
                 currentPos.addInplace(offset);
 
-                const contents = this.root.map.getTileContent(currentPos);
+                const contents = this.root.map.getTileContent(currentPos, entity.layer);
                 if (!contents) {
                     allBeltsMatch = false;
                     break;
@@ -156,7 +156,7 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
                 // All belts between this are obsolete, so drop them
                 for (let i = 0; i < matchingEntrance.range; ++i) {
                     currentPos.addInplace(offset);
-                    const contents = this.root.map.getTileContent(currentPos);
+                    const contents = this.root.map.getTileContent(currentPos, entity.layer);
                     assert(contents, "Invalid smart underground belt logic");
                     this.root.logic.tryDeleteBuilding(contents);
                 }
@@ -169,8 +169,8 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
                 const posBefore = currentPos.copy();
                 currentPos.addInplace(offset);
 
-                const entityBefore = this.root.map.getTileContent(posBefore);
-                const entityAfter = this.root.map.getTileContent(currentPos);
+                const entityBefore = this.root.map.getTileContent(posBefore, entity.layer);
+                const entityAfter = this.root.map.getTileContent(currentPos, entity.layer);
 
                 if (!entityBefore || !entityAfter) {
                     continue;
@@ -233,16 +233,16 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
 
         for (let x = area.x; x < area.right(); ++x) {
             for (let y = area.y; y < area.bottom(); ++y) {
-                const entity = this.root.map.getTileContentXY(x, y);
-                if (!entity) {
-                    continue;
-                }
-                const undergroundComp = entity.components.UndergroundBelt;
-                if (!undergroundComp) {
-                    continue;
-                }
+                const entities = this.root.map.getLayersContentsMultipleXY(x, y);
+                for (let i = 0; i < entities.length; ++i) {
+                    const entity = entities[i];
+                    const undergroundComp = entity.components.UndergroundBelt;
+                    if (!undergroundComp) {
+                        continue;
+                    }
 
-                undergroundComp.cachedLinkedEntity = null;
+                    undergroundComp.cachedLinkedEntity = null;
+                }
             }
         }
     }
@@ -297,7 +297,7 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
         ) {
             currentTile = currentTile.add(searchVector);
 
-            const potentialReceiver = this.root.map.getTileContent(currentTile);
+            const potentialReceiver = this.root.map.getTileContent(currentTile, "regular");
             if (!potentialReceiver) {
                 // Empty tile
                 continue;
@@ -308,15 +308,15 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
                 continue;
             }
 
-            if (receiverUndergroundComp.mode !== enumUndergroundBeltMode.receiver) {
-                // Not a receiver
-                continue;
-            }
-
             const receiverStaticComp = potentialReceiver.components.StaticMapEntity;
             if (receiverStaticComp.rotation !== targetRotation) {
                 // Wrong rotation
                 continue;
+            }
+
+            if (receiverUndergroundComp.mode !== enumUndergroundBeltMode.receiver) {
+                // Not a receiver, but a sender -> Abort to make sure we don't deliver double
+                break;
             }
 
             return { entity: potentialReceiver, distance: searchOffset };
@@ -393,6 +393,7 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
 
             if (remainingTime <= 0) {
                 const ejectorComp = entity.components.ItemEjector;
+
                 const nextSlotIndex = ejectorComp.getFirstFreeSlot();
                 if (nextSlotIndex !== null) {
                     if (ejectorComp.tryEject(nextSlotIndex, nextItem)) {

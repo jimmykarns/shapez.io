@@ -15,13 +15,14 @@
 #
 #  Adding a new language:
 #
-#    If you want to add a new language, ask me in the discord and I will setup
+#    If you want to add a new language, ask me in the Discord and I will setup
 #    the basic structure so the game also detects it.
 #
 
+---
 steamPage:
     # This is the short text appearing on the steam page
-    shortText: shapez.io er et spill som handler om å bygge fabrikker for å automatisere produksjon og kombinering av former med økende kompleksitet på et ubegrenset brett.
+    shortText: shapez.io er et spill som handler om å bygge fabrikker for å automatisere produksjon og kombinasjon av former med økende kompleksitet på et uendelig ekspanderende brett.
 
     # This is the long description for the steam page - It is contained here so you can help to translate it, and I will regulary update the store page.
     # NOTICE:
@@ -30,42 +31,59 @@ steamPage:
     longText: >-
         [img]{STEAM_APP_IMAGE}/extras/store_page_gif.gif[/img]
 
-        shapez.io er et spill som handler om å bygge fabrikker for å automatisere byggeprosessen og kombinere forskjellige former og fasonger. Lever objektene som øker i kompleskitet og fasonger for å progressere i spillet og åpne opp nye oppgraderinger til din fabrikk.
+        Shapez.io er et spill som handler om å bygge fabrikker for å automatisere produksjon og kombinasjon av former med økende kompleksitet på et uendelig ekspanderende brett.
+        Ved leveranse av de forespurte formene vil du komme videre i spillet og låse opp oppgraderinger for å øke farten på fabrikken din
 
-        Siden forespørselen øker, må du skalere opp fabrikken din for å tilpasse deg til behovet - Men ikke glem tilgangen du har til ressurser, du må utvide på det [b]uendelige brettet[/b]!
+        Etter hvert som forespørselen av former øker, vil du være nødt til å utvide fabrikken din for å møte etterspørselen - Ikke glem ressursene, du vil bli nødt til å utvide over det [b]uendelige brettet[/b]!
 
-        Siden figurer i seg selv kan bli kjedelig, må du snart mikse farger og fargelegge dine figurer - Kombiner rød, grønn og blå farge-ressurser for å produsere forskjellige farger, og fargelegg figurene for å tilfredsstille behovet.
+        Snart blir du nødt til å plande farger og male formene dine med dem - Kombiner røde, grønne og blåe farge ressurser for å produsere forskjellige farger og male former med dem for å tilfredstille etterspørselen.
 
-        Spillet har 18 nivåer (Som bør holde deg opptatt i mange timer!) men jeg legger konstant til nytt innhold - Det er mye som er planlagt!
+        Dette spillet har 18 progressive nivåer (Noe som burde holde deg opptatt i flere timer allerede!) men jeg legger stadig til nytt innhold - Det er mye som er planlagt!
 
+        Kjøp av spillet gir deg tilgang til den frittstående versjonen som har mange tilleggsfunksjoner og du vil også få tilgang til nyutviklede funksjoner.
 
-        [b]Frittstående Fordeler[/b]
+        [b]Frittstående fordeler[/b]
 
         [list]
-            [*] Kartmarkering
-            [*] Uendelige lagringsfiler
             [*] Mørk Modus
-            [*] Flere instillinger
-            [*] Tillater meg å videreutvikle shapez.io ❤️
-            [*] Flere funksjoner i fremtiden!
+            [*] Ubegrensede Veipunkter
+            [*] Uendelige Lagringsfiler
+            [*] Tilleggsinnstillinger
+            [*] Kommer snart: Ledninger og strøm! Sikter mot (omtrent) slutten av Juli 2020.
+            [*] Kommer snart: Flere Nivåer
+            [*] Tillater meg å fortsette å utvikle shapez.io ❤️
         [/list]
 
-        [b]Planlagte funksjoner & Forslag fra samfunnet[/b]
+        [b]Fremtidige Oppdateringer[/b]
 
-        Spillet er åpen kildekode - Alle kan bidra! Utenom det, så lytter jeg [b]veldig[/b] til samfunnet! Jeg prøver å lese alle forslag og ta imot så mye tilbakemeldinger som mulig.
+        Jeg oppdaterer spillet veldig ofte og prøver å presse inn en oppdatering i det minste hver uke!
 
         [list]
-            [*] Kampanje
-            [*] Flere nivåer & bygninger (Frittstående eksklusivt)
-            [*] Forskjellige brett, og kanskje hinder på brettet
-            [*] Konfigurerbart brett-generasjon (Endre antall og størrelse på ressursfelt, seed, med mer)
-            [*] Flere forskjellige type former
-            [*] Mer forbedring av ytelse (Selv om spillet allerede kjører ganske bra!)
-            [*] Fargeblind modus
+            [*] Forskjellige baner og utfordringer (f.eks. baner med hindringer)
+            [*] Gåter (lever den forspurte formen med et begrenset område / sett med bygninger)
+            [*] En historiemodus der bygninger har en pris
+            [*] Konfigurerbar kartgenerator (Konfigurer ressurser/former, størrelse/tetthet, seed og mer)
+            [*] Flere typer former
+            [*] Ytelsesforbedringer (Spillet kjører allerede ganske bra!)
             [*] Og mye mer!
         [/list]
 
-        Sjekk ut min trello tavle for hele planen! https://trello.com/b/ISQncpJP/shapezio
+        [b]Dette spillet er åpen kildekode![/b]
+
+        Hvem som helst kan bidra, Jeg er aktivt involvert i samfunnet og forsøker å gå gjennom alle forslag og ta tilbakemelding i betraktning der det er mulig.
+        Sørg for å sjekke trello panelet mitt for hele veikartet!
+
+        [b]Lenker[/b]
+
+        [list]
+            [*] [url=https://discord.com/invite/HN7EVzV]Offisiell Discord[/url]
+            [*] [url=https://trello.com/b/ISQncpJP/shapezio]Veikart[/url]
+            [*] [url=https://www.reddit.com/r/shapezio]Subreddit[/url]
+            [*] [url=https://github.com/tobspr/shapez.io]Kildekode (GitHub)[/url]
+            [*] [url=https://github.com/tobspr/shapez.io/blob/master/translations/README.md]Hjelp til å oversette[/url]
+        [/list]
+
+    discordLink: Offisiell Discord - Chat med meg!
 
 global:
     loading: Laster
@@ -73,6 +91,9 @@ global:
 
     # How big numbers are rendered, e.g. "10,000"
     thousandsDivider: ","
+
+    # What symbol to use to seperate the integer part from the fractional part of a number, e.g. "0.4"
+    decimalSeparator: "."
 
     # The suffix for large numbers, e.g. 1.3k, 400.2M, etc.
     suffix:
@@ -131,28 +152,6 @@ mainMenu:
     savegameLevel: Nivå <x>
     savegameLevelUnknown: Ukjent Nivå
 
-    contests:
-        contest_01_03062020:
-            title: "Konkurranse #01"
-            desc: Vinn <strong>$25</strong> for den kuleste basen!
-            longDesc: >-
-                For å gi noe tilbake til deg, tenkte jeg det ville vært kult med ukentlige konkurranser!
-                <br><br>
-                <strong>Denne ukens tema:</strong> Bygg den kuleste basen!
-                <br><br>
-                Her er tingen:<br>
-                <ul class="bucketList">
-                    <li>Send et skjermbilde av basen din til <strong>contest@shapez.io</strong></li>
-                    <li>Bonus poeng om du deler på sosiale medier!</li>
-                    <li>Jeg velger 5 skjermbilder og foreslår de på <strong>discord</strong> for samfunnet til å stemme.</li>
-                    <li>Vinneren får <strong>$25</strong> (Paypal, Amazon Gift Card, eller hva du foretrekker)</li>
-                    <li>Frist: 07.06.2020 00:00 Sentraleuropeisk sommertid</li>
-                </ul>
-                <br>
-                Jeg ser fram til å se dine kule skapninger!
-
-        showInfo: Vis
-        contestOver: Denne konkurransen er ferdig - Bli med på discord for å få varsel om nye konkurranser!
     continue: Fortsett
     newGame: Nytt Spill
     madeBy: Laget av <author-link>
@@ -260,6 +259,7 @@ dialogs:
     createMarker:
         title: Ny Markør
         desc: Gi markøren et meningsfullt navn, du kan også inkludere <strong>"short key"</strong> av et objekt (Som du kan generere <a href="https://viewer.shapez.io" target="_blank">her</a>)
+        titleEdit: Edit Marker
 
     markerDemoLimit:
         desc: Du kan kun ha to markører i demo verjsonen. Skaff deg frittstående versjon for ubegrensede markører!
@@ -267,6 +267,9 @@ dialogs:
     exportScreenshotWarning:
         title: Eksporter skjermbilde
         desc: Du forespurte å eksportere bilde av basen din som et skjermbilde. Vær obs på at dette kan ta lang tid for en stor base, og i verste fall kræsje spillet ditt (Husk å lagre først)!
+    massCutInsufficientConfirm:
+        title: Confirm cut
+        desc: You can not afford to paste this area! Are you sure you want to cut it?
 
 ingame:
     # This is shown in the top left corner and displays useful keybindings in
@@ -290,6 +293,7 @@ ingame:
         copySelection: Kopier
         clearSelection: Fjern Valgte
         pipette: Pipette
+        switchLayers: Switch layers
 
     # Everything related to placing buildings (I.e. as soon as you selected a building
     # from the toolbar)
@@ -405,9 +409,11 @@ ingame:
         cyan: Cyan
         white: Hvit
         uncolored: Ingen farge
+        black: Black
     shapeViewer:
         title: Lag
         empty: Tom
+        copyKey: Copy Key
 
 # All shop upgrades
 shopUpgrades:
@@ -482,6 +488,9 @@ buildings:
         ccw:
             name: Roter (Mot klokken)
             description: Roter objekter mot klokken, 90 grader.
+        fl:
+            name: Rotate (180)
+            description: Rotates shapes by 180 degrees.
 
     stacker:
         default:
@@ -515,6 +524,27 @@ buildings:
         storage:
             name: Lagringsboks
             description: Lagrer overflødige objekter, opp til en viss kapasitet. Kan bli brukt som mellomlagring for overflyt.
+    wire:
+        default:
+            name: Energy Wire
+            description: Allows you to transport energy.
+    advanced_processor:
+        default:
+            name: Color Inverter
+            description: Accepts a color or shape and inverts it.
+    energy_generator:
+        deliver: Deliver
+        toGenerateEnergy: For
+        default:
+            name: Energy Generator
+            description: Generates energy by consuming shapes.
+    wire_crossings:
+        default:
+            name: Wire Splitter
+            description: Splits a energy wire into two.
+        merger:
+            name: Wire Merger
+            description: Merges two energy wires into one.
 
 storyRewards:
     # Those are the rewards gained from completing the store
@@ -602,8 +632,9 @@ storyRewards:
 settings:
     title: Instillinger
     categories:
-        game: Spill
-        app: Applikasjon
+        general: General
+        userInterface: User Interface
+        advanced: Advanced
 
     versionBadges:
         dev: Utvikling
@@ -727,11 +758,11 @@ settings:
             title: Fargeblind Modus
             description: Aktiverer forskjellige verktøy som lar deg spille spillet om du er fargeblind.
         rotationByBuilding:
-          title: Roter basert på bygningstype
-          description: >-
-            Hver bygning type husker rotasjonen du sist brukte individuelt.
-            Dette kan være mer komfortabelt hvis du ofte veksler mellom plassering
-            av forskjellige bygninger.
+            title: Roter basert på bygningstype
+            description: >-
+                Hver bygning type husker rotasjonen du sist brukte individuelt.
+                Dette kan være mer komfortabelt hvis du ofte veksler mellom plassering
+                av forskjellige bygninger.
 
 keybindings:
     title: Hurtigtaster
@@ -799,6 +830,11 @@ keybindings:
         lockBeltDirection: Enable belt planner
         switchDirectionLockSide: "Planlegger: Bytt side"
         pipette: Pipette
+        menuClose: Close Menu
+        switchLayers: Switch layers
+        advanced_processor: Color Inverter
+        energy_generator: Energy Generator
+        wire: Energy Wire
 
 about:
     title: Om dette spillet
@@ -807,7 +843,7 @@ about:
 
         Hvis du ønsker å bidra, sjekk ut <a href="<githublink>" target="_blank">shapez.io på github</a>.<br><br>
 
-        Spillet ville ikke vært mulig uten det fantastidke discord samfunnet rundt spillet mitt - Du burde virkelig bli med på <a href="<discordlink>" target="_blank">discord serveren</a>!<br><br>
+        Spillet ville ikke vært mulig uten det fantastidke Discord samfunnet rundt spillet mitt - Du burde virkelig bli med på <a href="<discordlink>" target="_blank">Discord serveren</a>!<br><br>
 
         Lydsporet er laget av <a href="https://soundcloud.com/pettersumelius" target="_blank">Peppsen</a> - Han er rå.<br><br>
 

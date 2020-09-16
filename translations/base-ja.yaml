@@ -15,10 +15,11 @@
 #
 #  Adding a new language:
 #
-#    If you want to add a new language, ask me in the discord and I will setup
+#    If you want to add a new language, ask me in the Discord and I will setup
 #    the basic structure so the game also detects it.
 #
 
+---
 steamPage:
     # This is the short text appearing on the steam page
     shortText: shapez.ioは無限のマップ内で様々な"形"を資源とし、段々と複雑になっていく形の作成や合成の自動化を目指して工場を構築するゲームです。
@@ -30,42 +31,59 @@ steamPage:
     longText: >-
         [img]{STEAM_APP_IMAGE}/extras/store_page_gif.gif[/img]
 
-        shapez.ioは形の作成と合成を自動化するために工場を構築するゲームです。段々と複雑になる要件を納品していくことでゲームをすすめ、工場を高速化するためのアップグレードを解除していきます。
+        shapez.ioは無限のマップ内で様々な"形"を資源とし、段々と複雑になっていく形の作成や合成の自動化を目指して工場を構築するゲームです。
+        求められた"形"を届けることで様々なアップグレードを手に入れることができ、さらに工場の効率を上げることができます。
 
-        要件が増えてくると、ニーズに合わせて工場をスケールアップしていく必要があるでしょう。もちろん、[b]無限のマップ[/b]に展開する資源採取の拡張もお忘れなく！
+        "形"の需要が増えるにつれ、工場を拡大する必要があります - より多くの資源を手に入れるために[b]無限のマップ[!b]を開拓していく必要があります。
 
-        形状だけではすぐに飽きがきますが、色素を混ぜて形を塗る工程もあります。赤、緑、青の色素の資源を組み合わせて、要件を満たす色と形状を作り出しましょう。
+        "形"に色を塗る必要もあります - 赤、緑、青を混ぜ、さまざまな色を作り需要に応じて色が塗られた"形"を製造できます。
 
-        このゲームは現在18レベルまでが実装されていますが（これだけでもかなりのボリュームです）、今後も継続的に新しい要素が追加で実装されていく予定です。 - すでに沢山計画されています！
+        現在このゲームには18個のレベルがあり、今後これを拡大していく予定です - 他にも様々なアップデートを準備しています!
 
+        このゲームを買うことによってスタンドアローン版の様々な機能が使えるようになり、新しいアップデートもすぐに手に入ります。
 
-        [b]Web版にはないスタンドアローン版のメリット[/b]
+        [b]スタンドアローン版で使える機能[/b]
 
         [list]
-            [*] マップのマーク設置とマークへの移動
-            [*] 無制限のセーブデータ
             [*] ダークモード
-            [*] 多彩な設定
-            [*] shapez.ioのさらなる開発ができます ❤️
-            [*] 将来の追加内容実装
+            [*] ウェイポイントの制限がありません
+            [*] セーブの数の制限がありません
+            [*] 様々な設定
+            [*] 追加予定: ワイヤーとエネルギー! (7月末を目指しています)
+            [*] 追加予定: より多くのレベル
+            [*] shapez.io開発が助けられます❤️
         [/list]
 
-        [b]今後の実装予定とコミュニティの提案[/b]
+        [b]今後の予定[/b]
 
-        このゲームはオープンソースです。誰でも開発に参加できます！　それ以外にも、私はコミュニティの意見を[b]とても[/b]よく聞いており、なるべくすべての提案を読み、できるだけ多くのフィードバックを考慮に入れるようにしています。
+        週に一回はアップデートを出せることを目指しています。
 
         [list]
-            [*] 建造物にコストがかかるストーリーモード
-            [*] 追加のレベル、及び建造物（スタンドアローン版限定）
-            [*] 別マップ、もしかすると障害物
-            [*] 設定可能なマップ生成（数やサイズの設定、ランダム生成シード値、その他）
-            [*] 追加の形
-            [*] パフォーマンス向上（このゲームは現状でもかなり軽いです）
-            [*] 色覚異常モード
-            [*] 他にも沢山！
+            [*] Different maps and challenges (e.g. maps with obstacles)
+            [*] Puzzles (Deliver the requested shape with a restricted area / set of buildings)
+            [*] A story mode where buildings have a cost
+            [*] Configurable map generator (Configure resource/shape size/density, seed and more)
+            [*] Additional types of shapes
+            [*] Performance improvements (The game already runs pretty well!)
+            [*] And much more!
         [/list]
 
-        完全なロードマップは私のTrelloボードをチェックしてみてください！ https://trello.com/b/ISQncpJP/shapezio
+        [b]このゲームはオープンソースです![/b]
+
+        誰でもこのげむの開発を手伝うことができ、私もプレーヤーの意見をできるだけゲームに取り入れようとしています。
+        Trelloで今後の予定が全て確認できます。
+
+        [b]外部リンク[/b]
+
+        [list]
+            [*] [url=https://discord.com/invite/HN7EVzV]公式Discord[/url]
+            [*] [url=https://trello.com/b/ISQncpJP/shapezio]今後の予定[/url]
+            [*] [url=https://www.reddit.com/r/shapezio]Reddit[/url]
+            [*] [url=https://github.com/tobspr/shapez.io]ソースコード(GitHub)[/url]
+            [*] [url=https://github.com/tobspr/shapez.io/blob/master/translations/README.md]翻訳に参加[/url]
+        [/list]
+
+    discordLink: 公式Discord - 私と話せます!
 
 global:
     loading: ロード中
@@ -73,6 +91,9 @@ global:
 
     # How big numbers are rendered, e.g. "10,000"
     thousandsDivider: ","
+
+    # What symbol to use to seperate the integer part from the fractional part of a number, e.g. "0.4"
+    decimalSeparator: "."
 
     # The suffix for large numbers, e.g. 1.3k, 400.2M, etc.
     suffix:
@@ -114,14 +135,14 @@ demoBanners:
     # This is the "advertisement" shown in the main menu and other various places
     title: デモ版
     intro: >-
-        スタンドアローン版を手に入れ、すべての要素をアンロックしましょう！
+        スタンドアローン版を手に入れ、すべての機能をアンロックしましょう！
 
 mainMenu:
     play: プレイ
     changelog: 更新履歴
     importSavegame: インポート
     openSourceHint: このゲームはオープンソースです
-    discordLink: 公式Discordサーバ
+    discordLink: 公式Discord
     helpTranslate: 翻訳に参加
 
     # This is shown when using firefox and other browsers which are not supported.
@@ -131,31 +152,9 @@ mainMenu:
     savegameLevel: レベル <x>
     savegameLevelUnknown: 不明なレベル
 
-    contests:
-        contest_01_03062020:
-            title: "Contest #01"
-            desc: Win <strong>$25</strong> for the coolest base!
-            longDesc: >-
-                To give something back to you, I thought it would be cool to make weekly contests!
-                <br><br>
-                <strong>This weeks topic:</strong> Build the coolest base!
-                <br><br>
-                Here's the deal:<br>
-                <ul class="bucketList">
-                    <li>Submit a screenshot of your base to <strong>contest@shapez.io</strong></li>
-                    <li>Bonus points if you share it on social media!</li>
-                    <li>I will choose 5 screenshots and propose it to the <strong>discord</strong> community to vote.</li>
-                    <li>The winner gets <strong>$25</strong> (Paypal, Amazon Gift Card, whatever you prefer)</li>
-                    <li>Deadline: 07.06.2020 12:00 AM CEST</li>
-                </ul>
-                <br>
-                I'm looking forward to seeing your awesome creations!
-
-        showInfo: View
-        contestOver: This contest has ended - Join the discord to get noticed about new contests!
     continue: 続きから
     newGame: 新規ゲーム
-    madeBy: Made by <author-link>
+    madeBy: 制作者 <author-link>
     subreddit: Reddit
 
 dialogs:
@@ -253,6 +252,7 @@ dialogs:
 
     createMarker:
         title: マーカーを設置
+        titleEdit: マーカーを編集
         desc: わかりやすい名前をつけてください。形を表す<strong>短いキー</strong>を含めることもできます。（<a href="https://viewer.shapez.io" target="_blank">ここ</a>から生成できます）
 
     markerDemoLimit:
@@ -262,6 +262,11 @@ dialogs:
         title: カット確認
         desc: >-
             多数の建造物をカットしようとしています！ (<count> 個の選択) 続行しますか？
+
+    massCutInsufficientConfirm:
+        title: カット確認
+        desc: >-
+            設置コストが不足しています！ 続行しますか？
 
     exportScreenshotWarning:
         title: スクリーンショット出力
@@ -291,6 +296,7 @@ ingame:
         copySelection: コピー
         clearSelection: 選択範囲をクリア
         pipette: ピペット
+        switchLayers: Switch layers
 
     # Everything related to placing buildings (I.e. as soon as you selected a building
     # from the toolbar)
@@ -406,9 +412,11 @@ ingame:
         cyan: シアン
         white: 白
         uncolored: 無色
+        black: 黒
     shapeViewer:
         title: レイヤー
         empty: 空
+        copyKey: Copy Key
 
 # All shop upgrades
 shopUpgrades:
@@ -483,6 +491,9 @@ buildings:
         ccw:
             name: 回転機 (逆)
             description: 形を反時計回り方向に90度回転します。
+        fl:
+            name: 回転機 (180)
+            description: 形を180度回転します。
 
     stacker:
         default:
@@ -516,6 +527,27 @@ buildings:
         storage:
             name: 格納庫
             description: 余ったアイテムを指定の上限まで格納します。余剰の受け口としても使用可能です。
+    wire:
+        default:
+            name: Energy Wire
+            description: Allows you to transport energy.
+    advanced_processor:
+        default:
+            name: Color Inverter
+            description: 入力された色や形の色を反転します。
+    energy_generator:
+        deliver: Deliver
+        toGenerateEnergy: For
+        default:
+            name: エネルギー発電機
+            description: 入力された形を使って、エネルギーを発電します。
+    wire_crossings:
+        default:
+            name: ワイヤー分配機
+            description: １つのワイヤーを２つのワイヤーに分配します。
+        merger:
+            name: ワイヤー合流機
+            description: ２つのワイヤーを１つのワイヤーに合流します。
 
 storyRewards:
     # Those are the rewards gained from completing the store
@@ -603,8 +635,9 @@ storyRewards:
 settings:
     title: 設定
     categories:
-        game: ゲーム
-        app: アプリケーション
+        general: General
+        userInterface: User Interface
+        advanced: Advanced
 
     versionBadges:
         dev: Development
@@ -723,11 +756,11 @@ settings:
             title: 色覚モード
             description: 色覚異常を持っていてもゲームがプレイできるようにするための各種ツールを有効化します。
         rotationByBuilding:
-          title: Rotation by building type
-          description: >-
-            Each building type remembers the rotation you last set it to individually.
-            This may be more comfortable if you frequently switch between placing
-            different building types.
+            title: Rotation by building type
+            description: >-
+                Each building type remembers the rotation you last set it to individually.
+                This may be more comfortable if you frequently switch between placing
+                different building types.
 
 keybindings:
     title: キー設定
@@ -760,6 +793,7 @@ keybindings:
 
         menuOpenShop: アップグレード
         menuOpenStats: 統計情報
+        menuClose: メニューを閉じる
 
         toggleHud: HUD切り替え
         toggleFPSInfo: FPS、デバッグ情報表示切り替え
@@ -795,6 +829,10 @@ keybindings:
         lockBeltDirection: ベルトプランナーを有効化
         switchDirectionLockSide: "プランナー: 通る側を切り替え"
         pipette: ピペット
+        switchLayers: Switch layers
+        advanced_processor: Color Inverter
+        energy_generator: Energy Generator
+        wire: Energy Wire
 
 about:
     title: このゲームについて
@@ -803,7 +841,7 @@ about:
 
         開発に参加したい場合は以下をチェックしてみてください。<a href="<githublink>" target="_blank">shapez.io on github</a>.<br><br>
 
-        このゲームはdiscordでの素晴らしいコミュニティなしには実現しませんでした。 - このサーバにも是非参加してください！　<a href="<discordlink>" target="_blank">discord server</a>!<br><br>
+        このゲームはdiscordでの素晴らしいコミュニティなしには実現しませんでした。 - このサーバにも是非参加してください！　<a href="<discordlink>" target="_blank">Discord server</a>!<br><br>
 
         サウンドトラックは<a href="https://soundcloud.com/pettersumelius" target="_blank">Peppsen</a>により製作されました。 - 彼は素晴らしいです<br><br>
 
