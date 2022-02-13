@@ -27,7 +27,7 @@
         "@babel/preset-env": "^7.5.4",
         "@types/cordova": "^0.0.34",
         "@types/filesystem": "^0.0.29",
-        "ajv": "^6.10.2",
+        "ajv": "^6.12.3",
         "babel-loader": "^8.0.4",
         "circular-dependency-plugin": "^5.0.2",
         "circular-json": "^0.5.9",
